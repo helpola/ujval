@@ -1,9 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Fetch daily financial news
-    fetchFinancialNews();
-
-    // Fetch daily stock updates
-    fetchStockUpdates();
+    // Fetch news and stock updates when the page loads
+    fetchNews();
+    fetchStockUpdates('RELIANCE.BSE');  // Example for Reliance, can be changed
 });
 
 // Function to switch between pages
@@ -15,16 +13,16 @@ function showPage(pageId) {
     document.getElementById(pageId).style.display = 'block';
 }
 
-// Fetch financial news data from the News API
-function fetchFinancialNews() {
+// Fetch news from NewsAPI
+function fetchNews() {
     const newsContainer = document.getElementById('news-container');
+    const newsApiKey = 'CSC1R5TS8PCT69OD';  // Replace with your Global News API key
     
-    fetch('https://newsapi.org/v2/everything?q=finance&apiKey=f7c6f03e5d714a3b9a3ee4c8e84cd775')
+    fetch(`https://newsapi.org/v2/top-headlines?category=business&apiKey=${newsApiKey}`)
         .then(response => response.json())
         .then(data => {
-            const articles = data.articles.slice(0, 5); // Get first 5 articles
-            newsContainer.innerHTML = '';  // Clear the previous content
-            articles.forEach(article => {
+            newsContainer.innerHTML = '';  // Clear previous news
+            data.articles.forEach(article => {
                 const newsArticle = document.createElement('article');
                 newsArticle.innerHTML = `
                     <h3>${article.title}</h3>
@@ -34,51 +32,51 @@ function fetchFinancialNews() {
                 newsContainer.appendChild(newsArticle);
             });
         })
-        .catch(err => console.error('Error fetching news:', err));
+        .catch(err => {
+            newsContainer.innerHTML = `<p>Error fetching news. Please try again later.</p>`;
+            console.error('Error fetching news:', err);
+        });
 }
 
-// Fetch stock market data from the Finnhub API
-function fetchStockUpdates() {
+// Fetch stock market updates from Alpha Vantage API
+function fetchStockUpdates(symbol) {
     const stocksContainer = document.getElementById('stocks-container');
+    const stockApiKey = 'V3YZNMZU2GFD082W';  // Replace with your Alpha Vantage API key
     
-    fetch('https://finnhub.io/api/v1/quote?symbol=AAPL&token=cqugcrhr01qvea0bakq0cqugcrhr01qvea0bakqg')
+    fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=5min&apikey=${stockApiKey}`)
         .then(response => response.json())
         .then(data => {
-            stocksContainer.innerHTML = '';  // Clear the previous content
-            const stockUpdate = document.createElement('article');
-            stockUpdate.innerHTML = `
-                <h3>Apple Inc. (AAPL)</h3>
-                <p>Current Price: $${data.c}</p>
-                <p>High Price: $${data.h}</p>
-                <p>Low Price: $${data.l}</p>
-                <p>Previous Close: $${data.pc}</p>
-            `;
-            stocksContainer.appendChild(stockUpdate);
-        })
-        .catch(err => console.error('Error fetching stock data:', err));
-}
+            const timeSeries = data['Time Series (5min)'];
+            if (timeSeries) {
+                const latestTime = Object.keys(timeSeries)[0];
+                const latestData = timeSeries[latestTime];
 
-// Stock search function for the Stock Search page
-function searchStock() {
-    const symbol = document.getElementById('stock-symbol').value.toUpperCase();
-    const resultContainer = document.getElementById('stock-result');
-    resultContainer.innerHTML = ''; // Clear previous results
-
-    fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=cqugcrhr01qvea0bakq0cqugcrhr01qvea0bakqg`)
-        .then(response => response.json())
-        .then(data => {
-            const stockResult = document.createElement('article');
-            stockResult.innerHTML = `
-                <h3>${symbol}</h3>
-                <p>Current Price: $${data.c}</p>
-                <p>High Price: $${data.h}</p>
-                <p>Low Price: $${data.l}</p>
-                <p>Previous Close: $${data.pc}</p>
-            `;
-            resultContainer.appendChild(stockResult);
+                const currentPrice = latestData['4. close'];
+                const highPrice = latestData['2. high'];
+                const lowPrice = latestData['3. low'];
+                
+                stocksContainer.innerHTML = '';  // Clear previous stock data
+                const stockUpdate = document.createElement('article');
+                stockUpdate.innerHTML = `
+                    <h3>${symbol}</h3>
+                    <p>Current Price: ₹${currentPrice}</p>
+                    <p>High Price: ₹${highPrice}</p>
+                    <p>Low Price: ₹${lowPrice}</p>
+                    <p>Last Updated: ${latestTime}</p>
+                `;
+                stocksContainer.appendChild(stockUpdate);
+            } else {
+                stocksContainer.innerHTML = `<p>No data found for ${symbol}.</p>`;
+            }
         })
         .catch(err => {
-            resultContainer.innerHTML = `<p>Error fetching data for ${symbol}</p>`;
+            stocksContainer.innerHTML = `<p>Error fetching stock data. Please try again later.</p>`;
             console.error('Error fetching stock data:', err);
         });
+}
+
+// Stock search function
+function searchStock() {
+    const symbol = document.getElementById('stock-symbol').value.toUpperCase() + '.BSE';  // Adjust for NSE
+    fetchStockUpdates(symbol);
 }
