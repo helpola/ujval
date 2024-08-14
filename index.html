@@ -3,43 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Helpola | Financial News & Stock Watch</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Helpola | NSE News & Stock Watch</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+
+        #news-container, #stock-container {
+            margin-top: 20px;
+        }
+
+        article {
+            background-color: #f4f4f4;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .loading {
+            font-style: italic;
+            color: #777;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <nav>
-            <ul>
-                <li><a href="#" onclick="showPage('home')">Home</a></li>
-                <li><a href="#" onclick="showPage('stock-search')">Stock Search</a></li>
-                <li><a href="#" onclick="showPage('watchlist')">Watchlist</a></li>
-            </ul>
-        </nav>
-        <h1>Helpola | Financial News & Stock Watch</h1>
+        <h1>Helpola | NSE News & Stock Watch</h1>
     </header>
-    
+
     <main>
-        <section id="home">
+        <section>
             <h2>Today's Financial News</h2>
-            <div id="news-container"></div>
+            <div id="news-container" class="loading">Loading news...</div>
 
             <h2>Stock Market Updates</h2>
-            <div id="stocks-container"></div>
-        </section>
-
-        <section id="stock-search" style="display:none;">
-            <h2>Stock Search</h2>
-            <input type="text" id="stock-symbol" placeholder="Enter stock symbol (e.g., RELIANCE.BSE)">
-            <button onclick="searchStock()">Search</button>
-            <div id="stock-result"></div>
-        </section>
-
-        <section id="watchlist" style="display:none;">
-            <h2>Your Watchlist</h2>
-            <!-- Watchlist items go here -->
+            <input type="text" id="stock-symbol" placeholder="Enter stock symbol (e.g., RELIANCE.BSE)" />
+            <button onclick="fetchStock()">Fetch Stock Data</button>
+            <div id="stock-container" class="loading">Enter a stock symbol to fetch data.</div>
         </section>
     </main>
-    
-    <script src="script.js"></script>
+
+    <script>
+        const newsApiKey = 'CSC1R5TS8PCT69OD';  // Your NewsAPI key
+        const stockApiKey = 'V3YZNMZU2GFD082W';  // Your Alpha Vantage key
+
+        // Fetch financial news
+        function fetchNews() {
+            const newsContainer = document.getElementById('news-container');
+
+            fetch(`https://newsapi.org/v2/top-headlines?category=business&apiKey=${newsApiKey}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.articles) {
+                        newsContainer.innerHTML = '';
+                        data.articles.slice(0, 5).forEach(article => {
+                            const articleElement = document.createElement('article');
+                            articleElement.innerHTML = `
+                                <h3>${article.title}</h3>
+                                <p>${article.description}</p>
+                                <a href="${article.url}" target="_blank">Read more</a>
+                            `;
+                            newsContainer.appendChild(articleElement);
+                        });
+                    } else {
+                        newsContainer.innerHTML = 'No news available at the moment.';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching news:', error);
+                    newsContainer.innerHTML = 'Failed to load news.';
+                });
+        }
+
+        // Fetch stock market data for NSE stocks
+        function fetchStock() {
+            const symbol = document.getElementById('stock-symbol').value.toUpperCase();
+            const stockContainer = document.getElementById('stock-container');
+            if (!symbol) {
+                stockContainer.innerHTML = 'Please enter a valid stock symbol.';
+                return;
+            }
+
+            stockContainer.innerHTML = 'Loading stock data...';
+
+            fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=5min&apikey=${stockApiKey}`)
+                .then(response => response.json())
+                .then(data => {
+                    const timeSeries = data['Time Series (5min)'];
+                    if (timeSeries) {
+                        const latestTime = Object.keys(timeSeries)[0];
+                        const latestData = timeSeries[latestTime];
+
+                        const currentPrice = latestData['4. close'];
+                        const highPrice = latestData['2. high'];
+                        const lowPrice = latestData['3. low'];
+
+                        stockContainer.innerHTML = `
+                            <article>
+                                <h3>${symbol}</h3>
+                                <p>Current Price: ₹${currentPrice}</p>
+                                <p>High Price: ₹${highPrice}</p>
+                                <p>Low Price: ₹${lowPrice}</p>
+                                <p>Last Updated: ${latestTime}</p>
+                            </article>
+                        `;
+                    } else {
+                        stockContainer.innerHTML = 'No data found for this stock symbol.';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching stock data:', error);
+                    stockContainer.innerHTML = 'Failed to load stock data.';
+                });
+        }
+
+        // Load the news when the page loads
+        document.addEventListener('DOMContentLoaded', fetchNews);
+    </script>
 </body>
 </html>
