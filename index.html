@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Helpola | Daily Financial News & Stock Watch</title>
+    <title>Helpola | Financial News & Stock Watch</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
         <nav>
-            <a href="index.html">Home</a>
-            <a href="stock-search.html">Stock Search</a>
-            <a href="watchlist.html">Watchlist</a>
+            <a href="#" onclick="showPage('home')">Home</a>
+            <a href="#" onclick="showPage('stock-search')">Stock Search</a>
+            <a href="#" onclick="showPage('watchlist')">Watchlist</a>
         </nav>
-        <h1>Helpola | Daily Financial News</h1>
+        <h1>Helpola | Financial News & Stock Watch</h1>
     </header>
 
-    <main>
+    <!-- Home Page Content -->
+    <main id="home">
         <section id="financial-news">
             <h2>Today's Financial News</h2>
             <div id="news-container"></div>
@@ -25,6 +26,24 @@
         <section id="stock-market-updates">
             <h2>Stock Market Updates</h2>
             <div id="stocks-container"></div>
+        </section>
+    </main>
+
+    <!-- Stock Search Page Content -->
+    <main id="stock-search" style="display: none;">
+        <section>
+            <input type="text" id="stock-symbol" placeholder="Enter Stock Symbol">
+            <button onclick="searchStock()">Search</button>
+        </section>
+        <section id="stock-result"></section>
+    </main>
+
+    <!-- Watchlist Page Content -->
+    <main id="watchlist" style="display: none;">
+        <section id="watchlist-container">
+            <h2>Your Stock Watchlist</h2>
+            <p>Track your favorite stocks here.</p>
+            <!-- Watchlist content will go here -->
         </section>
     </main>
 
