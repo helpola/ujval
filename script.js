@@ -23,6 +23,7 @@ function fetchFinancialNews() {
         .then(response => response.json())
         .then(data => {
             const articles = data.articles.slice(0, 5); // Get first 5 articles
+            newsContainer.innerHTML = '';  // Clear the previous content
             articles.forEach(article => {
                 const newsArticle = document.createElement('article');
                 newsArticle.innerHTML = `
@@ -43,6 +44,7 @@ function fetchStockUpdates() {
     fetch('https://finnhub.io/api/v1/quote?symbol=AAPL&token=YOUR_FINNHUB_API_KEY')
         .then(response => response.json())
         .then(data => {
+            stocksContainer.innerHTML = '';  // Clear the previous content
             const stockUpdate = document.createElement('article');
             stockUpdate.innerHTML = `
                 <h3>Apple Inc. (AAPL)</h3>
