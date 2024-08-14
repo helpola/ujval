@@ -3,21 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resume Generator</title>
+    <title>Helpola | Daily Financial News & Stock Watch</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Resume Generator</h1>
-        <div class="input-area">
-            <textarea id="jobDescription" placeholder="Paste job description here"></textarea>
-            <textarea id="resumeDetails" placeholder="Paste your resume details here"></textarea>
-            <button onclick="generateResume()">Generate Resume</button>
-        </div>
-        <div id="resumeScore"></div>
-        <div id="overleafCode"></div>
-        <button id="downloadButton" style="display: none;">Download Resume</button>
-    </div>
+    <header>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="stock-search.html">Stock Search</a>
+            <a href="watchlist.html">Watchlist</a>
+        </nav>
+        <h1>Helpola | Daily Financial News</h1>
+    </header>
+
+    <main>
+        <section id="financial-news">
+            <h2>Today's Financial News</h2>
+            <div id="news-container"></div>
+        </section>
+
+        <section id="stock-market-updates">
+            <h2>Stock Market Updates</h2>
+            <div id="stocks-container"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Helpola. All Rights Reserved.</p>
+    </footer>
 
     <script src="script.js"></script>
 </body>
