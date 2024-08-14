@@ -15,11 +15,11 @@ function showPage(pageId) {
     document.getElementById(pageId).style.display = 'block';
 }
 
-// Fetch financial news data from an API
+// Fetch financial news data from the News API
 function fetchFinancialNews() {
     const newsContainer = document.getElementById('news-container');
     
-    fetch('https://newsapi.org/v2/everything?q=finance&apiKey=YOUR_NEWS_API_KEY')
+    fetch('https://newsapi.org/v2/everything?q=finance&apiKey=f7c6f03e5d714a3b9a3ee4c8e84cd775')
         .then(response => response.json())
         .then(data => {
             const articles = data.articles.slice(0, 5); // Get first 5 articles
@@ -37,11 +37,11 @@ function fetchFinancialNews() {
         .catch(err => console.error('Error fetching news:', err));
 }
 
-// Fetch stock market data from an API
+// Fetch stock market data from the Finnhub API
 function fetchStockUpdates() {
     const stocksContainer = document.getElementById('stocks-container');
     
-    fetch('https://finnhub.io/api/v1/quote?symbol=AAPL&token=YOUR_FINNHUB_API_KEY')
+    fetch('https://finnhub.io/api/v1/quote?symbol=AAPL&token=cqugcrhr01qvea0bakq0cqugcrhr01qvea0bakqg')
         .then(response => response.json())
         .then(data => {
             stocksContainer.innerHTML = '';  // Clear the previous content
@@ -64,7 +64,7 @@ function searchStock() {
     const resultContainer = document.getElementById('stock-result');
     resultContainer.innerHTML = ''; // Clear previous results
 
-    fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=YOUR_FINNHUB_API_KEY`)
+    fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=cqugcrhr01qvea0bakq0cqugcrhr01qvea0bakqg`)
         .then(response => response.json())
         .then(data => {
             const stockResult = document.createElement('article');
