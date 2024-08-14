@@ -1,56 +1,113 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Helpola | Financial News & Stock Watch</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <header>
-        <nav>
-            <a href="#" onclick="showPage('home')">Home</a>
-            <a href="#" onclick="showPage('stock-search')">Stock Search</a>
-            <a href="#" onclick="showPage('watchlist')">Watchlist</a>
-        </nav>
-        <h1>Helpola | Financial News & Stock Watch</h1>
-    </header>
+document.addEventListener('DOMContentLoaded', function () {
+    // Fetch daily financial news
+    fetchFinancialNews();
 
-    <!-- Home Page Content -->
-    <main id="home">
-        <section id="financial-news">
-            <h2>Today's Financial News</h2>
-            <div id="news-container"></div>
-        </section>
+    // Fetch daily stock updates
+    fetchStockUpdates();
+});
 
-        <section id="stock-market-updates">
-            <h2>Stock Market Updates</h2>
-            <div id="stocks-container"></div>
-        </section>
-    </main>
+// Function to switch between pages
+function showPage(pageId) {
+    const pages = ['home', 'stock-search', 'watchlist'];
+    pages.forEach(page => {
+        document.getElementById(page).style.display = 'none';
+    });
+    document.getElementById(pageId).style.display = 'block';
+}
 
-    <!-- Stock Search Page Content -->
-    <main id="stock-search" style="display: none;">
-        <section>
-            <input type="text" id="stock-symbol" placeholder="Enter Stock Symbol">
-            <button onclick="searchStock()">Search</button>
-        </section>
-        <section id="stock-result"></section>
-    </main>
+// Fetch financial news data from the News API
+function fetchFinancialNews() {
+    const newsContainer = document.getElementById('news-container');
+    
+    fetch('https://newsapi.org/v2/everything?q=finance&apiKey=f7c6f03e5d714a3b9a3ee4c8e84cd775')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch financial news");
+            }
+            return response.json();
+        })
+        .then(data => {
+            const articles = data.articles.slice(0, 5); // Get first 5 articles
+            newsContainer.innerHTML = '';  // Clear the previous content
+            articles.forEach(article => {
+                const newsArticle = document.createElement('article');
+                newsArticle.innerHTML = `
+                    <h3>${article.title || "No Title"}</h3>
+                    <p>${article.description || "No Description"}</p>
+                    <a href="${article.url}" target="_blank">Read more</a>
+                `;
+                newsContainer.appendChild(newsArticle);
+            });
+        })
+        .catch(err => {
+            newsContainer.innerHTML = `<p>Error fetching news data. Please try again later.</p>`;
+            console.error('Error fetching news:', err);
+        });
+}
 
-    <!-- Watchlist Page Content -->
-    <main id="watchlist" style="display: none;">
-        <section id="watchlist-container">
-            <h2>Your Stock Watchlist</h2>
-            <p>Track your favorite stocks here.</p>
-            <!-- Watchlist content will go here -->
-        </section>
-    </main>
+// Fetch stock market data from the Finnhub API
+function fetchStockUpdates() {
+    const stocksContainer = document.getElementById('stocks-container');
+    
+    fetch('https://finnhub.io/api/v1/quote?symbol=AAPL&token=cqugcrhr01qvea0bakq0cqugcrhr01qvea0bakqg')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch stock data");
+            }
+            return response.json();
+        })
+        .then(data => {
+            stocksContainer.innerHTML = '';  // Clear the previous content
+            if (data && data.c && data.h && data.l && data.pc) {
+                const stockUpdate = document.createElement('article');
+                stockUpdate.innerHTML = `
+                    <h3>Apple Inc. (AAPL)</h3>
+                    <p>Current Price: $${data.c.toFixed(2)}</p>
+                    <p>High Price: $${data.h.toFixed(2)}</p>
+                    <p>Low Price: $${data.l.toFixed(2)}</p>
+                    <p>Previous Close: $${data.pc.toFixed(2)}</p>
+                `;
+                stocksContainer.appendChild(stockUpdate);
+            } else {
+                stocksContainer.innerHTML = `<p>No valid stock data found.</p>`;
+            }
+        })
+        .catch(err => {
+            stocksContainer.innerHTML = `<p>Error fetching stock data. Please try again later.</p>`;
+            console.error('Error fetching stock data:', err);
+        });
+}
 
-    <footer>
-        <p>&copy; 2024 Helpola. All Rights Reserved.</p>
-    </footer>
+// Stock search function for the Stock Search page
+function searchStock() {
+    const symbol = document.getElementById('stock-symbol').value.toUpperCase();
+    const resultContainer = document.getElementById('stock-result');
+    resultContainer.innerHTML = ''; // Clear previous results
 
-    <script src="script.js"></script>
-</body>
-</html>
+    fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=cqugcrhr01qvea0bakq0cqugcrhr01qvea0bakqg`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch stock data");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data && data.c && data.h && data.l && data.pc) {
+                const stockResult = document.createElement('article');
+                stockResult.innerHTML = `
+                    <h3>${symbol}</h3>
+                    <p>Current Price: $${data.c.toFixed(2)}</p>
+                    <p>High Price: $${data.h.toFixed(2)}</p>
+                    <p>Low Price: $${data.l.toFixed(2)}</p>
+                    <p>Previous Close: $${data.pc.toFixed(2)}</p>
+                `;
+                resultContainer.appendChild(stockResult);
+            } else {
+                resultContainer.innerHTML = `<p>No valid data for ${symbol}. Please check the symbol and try again.</p>`;
+            }
+        })
+        .catch(err => {
+            resultContainer.innerHTML = `<p>Error fetching data for ${symbol}. Please try again later.</p>`;
+            console.error('Error fetching stock data:', err);
+        });
+}
