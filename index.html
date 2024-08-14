@@ -1,37 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Helpola | Stock Market Data</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Link to CSS file -->
+    <title>Resume Generator</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-    <header>
-        <h1>Helpola | Daily Stock Market Data</h1>
-    </header>
-
     <div class="container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Participant</th>
-                    <th>Segment</th>
-                    <th>Bearish</th>
-                    <th>Bullish</th>
-                    <th>Net OI</th>
-                    <th>Change</th>
-                </tr>
-            </thead>
-            <tbody id="marketData">
-                <!-- Dynamic Data will be injected here -->
-            </tbody>
-        </table>
+        <h1>Resume Generator</h1>
+        <div class="input-area">
+            <textarea id="jobDescription" placeholder="Paste job description here"></textarea>
+            <textarea id="resumeDetails" placeholder="Paste your resume details here"></textarea>
+            <button onclick="generateResume()">Generate Resume</button>
+        </div>
+        <div id="resumeScore"></div>
+        <div id="overleafCode"></div>
+        <button id="downloadButton" style="display: none;">Download Resume</button>
     </div>
 
-    <script src="script.js"></script> <!-- Link to JavaScript file -->
+    <script src="script.js"></script>
 </body>
-
 </html>
