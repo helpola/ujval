@@ -48,10 +48,12 @@ body {
 
 .cell.x {
     color: red;
+    font-weight: bold;
 }
 
 .cell.o {
     color: blue;
+    font-weight: bold;
 }
 
 #winner-popup {
