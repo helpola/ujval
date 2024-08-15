@@ -1,15 +1,16 @@
-// Example for loading CSV data
-fetch('data.csv')
-    .then(response => response.text())
+// Fetch JSON data
+fetch('data.json')
+    .then(response => response.json())
     .then(data => {
-        const rows = data.split('\n').slice(1); // Skip header row
         let html = '<table border="1">';
-        rows.forEach(row => {
-            const cols = row.split(',');
+        data.forEach(row => {
             html += '<tr>';
-            cols.forEach(col => html += `<td>${col}</td>`);
+            for (let key in row) {
+                html += `<td>${row[key]}</td>`;
+            }
             html += '</tr>';
         });
         html += '</table>';
         document.getElementById('data-display').innerHTML = html;
-    });
+    })
+    .catch(error => console.error('Error loading JSON:', error));
