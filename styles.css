@@ -1,67 +1,75 @@
-/* styles.css */
 body {
-    font-family: Arial, sans-serif;
-    text-align: center;
+    background: linear-gradient(135deg, #000428, #004e92);
+    font-family: 'Arial', sans-serif;
     margin: 0;
-    padding: 0;
-    background: #f0f0f0; /* Light background for better contrast */
-}
-
-.container {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    justify-content: center;
     height: 100vh;
+    color: white;
+    text-align: center;
 }
 
-#player-names input {
-    margin: 10px;
-    padding: 10px;
-    font-size: 1em;
+.adsense-space {
+    margin-bottom: 10px;
+    width: 100%;
+    height: 90px;
+    background-color: #ddd; /* Placeholder for AdSense */
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
 }
 
-#game-board {
+.game-container {
+    max-width: 300px;
+    width: 100%;
+    padding: 20px;
+    background: #1c1c1c;
+    border-radius: 15px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
+}
+
+.game-title {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.board {
     display: grid;
-    grid-template-columns: repeat(3, 100px);
-    grid-gap: 5px;
-    justify-content: center;
-    margin: 20px auto;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+    margin-bottom: 20px;
 }
 
 .cell {
-    width: 100px;
-    height: 100px;
-    background: #fff;
-    border: 2px solid #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3em;
-    color: #000; /* Ensure visibility of X and O */
+    background: #eee;
+    border-radius: 10px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    font-size: 2em;
+    color: black;
     cursor: pointer;
-    transition: background 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80px;
+    transition: all 0.2s ease;
 }
 
-.cell.x::after {
-    content: "X";
+.cell:hover {
+    background: #ddd;
+    transform: scale(1.05);
 }
 
-.cell.o::after {
-    content: "O";
+.restart-btn {
+    background: #ff6600;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: background 0.3s ease;
 }
 
-#winner-popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 20px;
-    background: #fff;
-    border: 2px solid #000;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-}
-
-#winner-popup.hidden {
-    display: none;
+.restart-btn:hover {
+    background: #ff4500;
 }
