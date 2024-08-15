@@ -4,7 +4,7 @@ body {
     text-align: center;
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, #ff0066, #ffcc00); /* Ensure this gradient has enough contrast */
+    background: #f0f0f0; /* Light background for better contrast */
 }
 
 .container {
@@ -32,29 +32,23 @@ body {
 .cell {
     width: 100px;
     height: 100px;
-    background: #fff; /* Ensure a high contrast with the black symbols */
+    background: #fff;
     border: 2px solid #000;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2em;
-    color: #000; /* Default color to black for contrast */
+    font-size: 3em;
+    color: #000; /* Ensure visibility of X and O */
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: background 0.2s;
 }
 
-.cell:hover {
-    transform: scale(1.1);
+.cell.x::after {
+    content: "X";
 }
 
-.cell.x {
-    font-weight: bold;
-    color: #000; /* Ensure 'X' is black */
-}
-
-.cell.o {
-    font-weight: bold;
-    color: #000; /* Ensure 'O' is black */
+.cell.o::after {
+    content: "O";
 }
 
 #winner-popup {
