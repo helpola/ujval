@@ -1,75 +1,81 @@
 body {
-    background: linear-gradient(135deg, #000428, #004e92);
     font-family: 'Arial', sans-serif;
-    margin: 0;
+    background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    color: white;
-    text-align: center;
-}
-
-.adsense-space {
-    margin-bottom: 10px;
-    width: 100%;
-    height: 90px;
-    background-color: #ddd; /* Placeholder for AdSense */
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    margin: 0;
 }
 
 .game-container {
-    max-width: 300px;
-    width: 100%;
-    padding: 20px;
-    background: #1c1c1c;
-    border-radius: 15px;
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
+    text-align: center;
+    color: #fff;
+    perspective: 1000px;
 }
 
 .game-title {
-    font-size: 2em;
+    font-size: 3rem;
     margin-bottom: 20px;
 }
 
-.board {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 10px;
+.mode-selection {
     margin-bottom: 20px;
+}
+
+.mode-btn, .restart-btn {
+    margin: 10px;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    background: #4b79a1;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.mode-btn:hover, .restart-btn:hover {
+    background: #5c6bc0;
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(3, 150px);
+    grid-template-rows: repeat(3, 150px);
+    gap: 10px;
+    margin: 20px auto;
+    perspective: 1000px;
 }
 
 .cell {
-    background: #eee;
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
-    font-size: 2em;
-    color: black;
-    cursor: pointer;
     display: flex;
-    justify-content: center;
     align-items: center;
-    height: 80px;
-    transition: all 0.2s ease;
+    justify-content: center;
+    font-size: 100px;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.3s;
+    transform-style: preserve-3d;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .cell:hover {
-    background: #ddd;
-    transform: scale(1.05);
+    transform: rotateY(10deg);
+}
+
+.cell.x {
+    color: #ff0000;
+}
+
+.cell.o {
+    color: #0000ff;
 }
 
 .restart-btn {
-    background: #ff6600;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 1.2em;
-    transition: background 0.3s ease;
-}
-
-.restart-btn:hover {
-    background: #ff4500;
+    background: #ff5722;
 }
