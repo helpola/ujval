@@ -11,11 +11,12 @@ body {
 .game-container {
     text-align: center;
     color: #fff;
-    perspective: 1000px;
+    max-width: 360px; /* Adjusted width */
+    margin: 20px;
 }
 
 .game-title {
-    font-size: 3rem;
+    font-size: 2.5rem; /* Smaller title */
     margin-bottom: 20px;
 }
 
@@ -25,14 +26,14 @@ body {
 
 .mode-btn, .restart-btn {
     margin: 10px;
-    padding: 15px 30px;
-    font-size: 1.2rem;
+    padding: 12px 25px; /* Adjusted padding */
+    font-size: 1rem; /* Adjusted font size */
     cursor: pointer;
     border: none;
-    border-radius: 10px;
+    border-radius: 8px; /* Slightly rounded corners */
     background: #4b79a1;
     color: white;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4); /* Darker shadow for contrast */
 }
 
 .mode-btn:hover, .restart-btn:hover {
@@ -41,39 +42,37 @@ body {
 
 .game-board {
     display: grid;
-    grid-template-columns: repeat(3, 150px);
-    grid-template-rows: repeat(3, 150px);
-    gap: 10px;
+    grid-template-columns: repeat(3, 100px); /* Smaller cells */
+    grid-template-rows: repeat(3, 100px); /* Smaller cells */
+    gap: 5px;
     margin: 20px auto;
-    perspective: 1000px;
 }
 
 .cell {
-    width: 150px;
-    height: 150px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
+    width: 100px; /* Smaller cell size */
+    height: 100px; /* Smaller cell size */
+    background: rgba(255, 255, 255, 0.2); /* Increased opacity for better contrast */
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 100px;
+    font-size: 70px; /* Adjusted font size */
     color: #fff;
     cursor: pointer;
-    transition: transform 0.3s;
-    transform-style: preserve-3d;
+    transition: transform 0.2s, background-color 0.2s;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .cell:hover {
-    transform: rotateY(10deg);
+    transform: scale(1.05);
 }
 
 .cell.x {
-    color: #ff0000;
+    color: #ff5722; /* Bright red */
 }
 
 .cell.o {
-    color: #0000ff;
+    color: #03a9f4; /* Bright blue */
 }
 
 .restart-btn {
