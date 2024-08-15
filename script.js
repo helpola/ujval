@@ -1,63 +1,95 @@
-const board = document.querySelectorAll('.cell');
-const restartButton = document.getElementById('restart-button');
+const cells = document.querySelectorAll('.cell');
+let board = ['', '', '', '', '', '', '', '', ''];
 let currentPlayer = 'X';
-let gameState = Array(9).fill("");
+let gameActive = true;
+let singlePlayerMode = false;
 
-const winningConditions = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6]
-];
+function drawBoard() {
+    cells.forEach((cell, index) => {
+        cell.textContent = board[index];
+        cell.className = 'cell';
+        if (board[index] === 'X') {
+            cell.classList.add('x');
+        } else if (board[index] === 'O') {
+            cell.classList.add('o');
+        }
+    });
+}
 
-const handleCellClick = (e) => {
-    const cell = e.target;
-    const cellIndex = cell.getAttribute('data-index');
+function handleCellClick(event) {
+    const index = Array.from(cells).indexOf(event.target);
 
-    if (gameState[cellIndex] !== "" || !isGameActive) {
+    if (board[index] !== '' || !gameActive) {
         return;
     }
 
-    gameState[cellIndex] = currentPlayer;
-    cell.textContent = currentPlayer;
-
-    if (checkWin()) {
-        alert(`${currentPlayer} has won!`);
-        isGameActive = false;
-    } else if (!gameState.includes("")) {
-        alert("It's a draw!");
-        isGameActive = false;
+    board[index] = currentPlayer;
+    drawBoard();
+    handleResultValidation();
+    if (singlePlayerMode && currentPlayer === 'O') {
+        setTimeout(computerPlay, 500);
     }
+}
 
-    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-};
-
-const checkWin = () => {
+function handleResultValidation() {
+    const winningConditions = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],
+        [0, 4, 8], [2, 4, 6]
+    ];
     let roundWon = false;
 
-    for (let i = 0; i < winningConditions.length; i++) {
-        const [a, b, c] = winningConditions[i];
-        if (gameState[a] && gameState[a] === gameState[b] && gameState[a] === gameState[c]) {
+    for (let condition of winningConditions) {
+        const [a, b, c] = condition;
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
             roundWon = true;
             break;
         }
     }
 
-    return roundWon;
-};
+    if (roundWon) {
+        gameActive = false;
+        alert(`${currentPlayer} wins!`);
+        return;
+    }
 
-const restartGame = () => {
-    gameState = Array(9).fill("");
-    board.forEach(cell => cell.textContent = "");
+    if (!board.includes('')) {
+        gameActive = false;
+        alert("It's a draw!");
+        return;
+    }
+
+    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+}
+
+function computerPlay() {
+    let availableCells = board.map((cell, index) => cell === '' ? index : null).filter(index => index !== null);
+    let randomIndex = availableCells[Math.floor(Math.random() * availableCells.length)];
+    board[randomIndex] = 'O';
+    drawBoard();
+    handleResultValidation();
+}
+
+function restartGame() {
     currentPlayer = 'X';
-    isGameActive = true;
-};
+    board.fill('');
+    gameActive = true;
+    drawBoard();
+}
 
-board.forEach(cell => cell.addEventListener('click', handleCellClick));
-restartButton.addEventListener('click', restartGame);
+function startSinglePlayer() {
+    singlePlayerMode = true;
+    restartGame();
+}
 
-let isGameActive = true;
+function startMultiplayer() {
+    singlePlayerMode = false;
+    restartGame();
+}
+
+cells.forEach(cell => cell.addEventListener('click', handleCellClick));
+document.getElementById('restart-button').addEventListener('click', restartGame);
+document.getElementById('singleplayer-btn').addEventListener('click', startSinglePlayer);
+document.getElementById('multiplayer-btn').addEventListener('click', startMultiplayer);
+
+drawBoard();
