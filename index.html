@@ -7,83 +7,88 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #0f172a;
-            color: #e2e8f0;
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: white;
             margin: 0;
             padding: 0;
         }
         header {
-            background: #1e293b;
-            padding: 20px;
             text-align: center;
-            color: #38bdf8;
-            font-size: 1.8em;
-            font-weight: bold;
+            padding: 20px;
+            background-color: #123456;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
         }
         .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 10px;
-            background: #1e293b;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            padding: 20px;
         }
-        .filter-section {
+        .controls {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
+            margin-bottom: 20px;
         }
-        .filter-section select, button {
+        .controls input, .controls button {
             padding: 10px;
-            border-radius: 5px;
+            font-size: 1rem;
             border: none;
-            background: #2563eb;
-            color: white;
-            font-size: 1em;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
+            border-radius: 5px;
+            margin-right: 10px;
         }
-        button:hover, select:hover {
-            transform: scale(1.05);
-            box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+        .controls input {
+            flex-grow: 1;
+        }
+        .controls button {
+            background-color: #1a73e8;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        .controls button:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-bottom: 20px;
         }
         th, td {
-            border: 1px solid #334155;
             padding: 10px;
             text-align: center;
+            border: 1px solid #ddd;
+            background-color: #2a3d55;
         }
         th {
-            background: #2563eb;
-            color: white;
+            background-color: #123456;
         }
         footer {
             text-align: center;
             padding: 10px;
-            background: #1e293b;
-            color: #94a3b8;
-            font-size: 0.9em;
+            background-color: #123456;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <header>Helpola Stock Screener</header>
+    <header>
+        <h1>Helpola Stock Screener</h1>
+    </header>
     <div class="container">
-        <div class="filter-section">
-            <select id="stock-selector">
-                <option value="">Select a Stock</option>
-            </select>
-            <button id="under-valued-btn">Find Under Valued Stocks</button>
-            <button id="over-valued-btn">Find Over Valued Stocks</button>
+        <div class="controls">
+            <input type="text" id="searchBar" placeholder="Search for stocks...">
+            <button id="homeButton">Home</button>
+            <button id="underValuedButton">Under Valued</button>
+            <button id="overValuedButton">Over Valued</button>
         </div>
-        <table id="stock-details">
+        <table id="stockTable">
             <thead>
                 <tr>
-                    <th>Listing</th>
+                    <th>Stock Name</th>
                     <th>Current Price</th>
                     <th>Start Price</th>
                     <th>End Price</th>
@@ -92,72 +97,97 @@
                     <th>52 Week Low</th>
                     <th>Market Cap</th>
                     <th>EPS</th>
-                    <th>PE</th>
+                    <th>PE Ratio</th>
                     <th>Intrinsic Value</th>
                     <th>Stock Value</th>
                 </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+                <!-- Data will populate here dynamically -->
+            </tbody>
         </table>
     </div>
     <footer>
-        &copy; 2025 Helpola | Stock market investments are subject to market risks. Please read all related documents carefully before investing.
+        <p>&copy; 2024 Helpola | Disclaimer: Stock trading involves risks. Invest responsibly.</p>
     </footer>
     <script>
-        const data = [
-            { SYMBOL: "20MICRONS", "DATE OF LISTING": "2008-06-10", "Current Price": 261.08, "Start Price": 58.75, "End Price": 92.9, "CAGR (Growth Rate)": 0.095977, "52 Week High": 348, "52 Week Low": 132, "Market Cap": "912.44 Cr", "EPS-Earn/Share": 16.72, PE: 15.62, "Intrinsic Value": 145.33, "Stock Value": "Over Valued" },
-            { SYMBOL: "360ONE", "DATE OF LISTING": "2019-09-19", "Current Price": 1290.15, "Start Price": "No Data", "End Price": "No Data", "CAGR (Growth Rate)": "No Data", "52 Week High": 1312.1, "52 Week Low": 591.5, "Market Cap": "50,093.52 Cr", "EPS-Earn/Share": 24.7, PE: 52.23, "Intrinsic Value": "No Data", "Stock Value": "Over Valued" },
-        ];
+        const stockDataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSG2ohk3hAg5oHhi3RSeydX17ZiYYOVBKqzMEx6Ag-8yO6gJO2IeyZ8EmreIG3ROeJyRTD95TqOSU3U/pub?output=csv';
 
-        const stockSelector = document.getElementById('stock-selector');
-        const tableBody = document.querySelector('#stock-details tbody');
-        const underValuedBtn = document.getElementById('under-valued-btn');
-        const overValuedBtn = document.getElementById('over-valued-btn');
+        const tableBody = document.querySelector('#stockTable tbody');
+        const searchBar = document.getElementById('searchBar');
+        const homeButton = document.getElementById('homeButton');
+        const underValuedButton = document.getElementById('underValuedButton');
+        const overValuedButton = document.getElementById('overValuedButton');
 
-        function populateDropdown() {
-            data.forEach(stock => {
-                const option = document.createElement('option');
-                option.value = stock.SYMBOL;
-                option.textContent = stock.SYMBOL;
-                stockSelector.appendChild(option);
-            });
-        }
+        let allData = [];
 
-        function displayStockDetails(stock) {
-            tableBody.innerHTML = '';
-            const row = document.createElement('tr');
-            Object.values(stock).forEach(value => {
-                const cell = document.createElement('td');
-                cell.textContent = value;
-                row.appendChild(cell);
-            });
-            tableBody.appendChild(row);
-        }
+        async function fetchData() {
+            const response = await fetch(stockDataUrl);
+            const data = await response.text();
+            const rows = data.split('\n').map(row => row.split(','));
+            const headers = rows[0];
+            const body = rows.slice(1);
 
-        function filterStocks(criteria) {
-            tableBody.innerHTML = '';
-            const filteredStocks = data.filter(stock => stock['Stock Value'] === criteria);
-            filteredStocks.forEach(stock => {
-                const row = document.createElement('tr');
-                Object.values(stock).forEach(value => {
-                    const cell = document.createElement('td');
-                    cell.textContent = value;
-                    row.appendChild(cell);
+            allData = body.map(row => {
+                const entry = {};
+                headers.forEach((header, index) => {
+                    entry[header.trim()] = row[index]?.trim();
                 });
+                return entry;
+            });
+            renderTable(allData);
+        }
+
+        function renderTable(data) {
+            tableBody.innerHTML = '';
+            data.forEach(stock => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${stock['Stock Name']}</td>
+                    <td>${stock['Current Price']}</td>
+                    <td>${stock['Start Price']}</td>
+                    <td>${stock['End Price']}</td>
+                    <td>${stock['CAGR']}</td>
+                    <td>${stock['52 Week High']}</td>
+                    <td>${stock['52 Week Low']}</td>
+                    <td>${stock['Market Cap']}</td>
+                    <td>${stock['EPS']}</td>
+                    <td>${stock['PE Ratio']}</td>
+                    <td>${stock['Intrinsic Value']}</td>
+                    <td>${stock['Stock Value']}</td>
+                `;
                 tableBody.appendChild(row);
             });
         }
 
-        stockSelector.addEventListener('change', () => {
-            const selectedSymbol = stockSelector.value;
-            const selectedStock = data.find(stock => stock.SYMBOL === selectedSymbol);
-            if (selectedStock) displayStockDetails(selectedStock);
+        searchBar.addEventListener('input', () => {
+            const query = searchBar.value.toLowerCase();
+            const filteredData = allData.filter(stock =>
+                stock['Stock Name'].toLowerCase().includes(query)
+            );
+            renderTable(filteredData);
         });
 
-        underValuedBtn.addEventListener('click', () => filterStocks('Under Valued'));
-        overValuedBtn.addEventListener('click', () => filterStocks('Over Valued'));
+        homeButton.addEventListener('click', () => {
+            searchBar.value = '';
+            renderTable(allData);
+        });
 
-        populateDropdown();
+        underValuedButton.addEventListener('click', () => {
+            const undervaluedData = allData.filter(stock =>
+                stock['Stock Value']?.toLowerCase() === 'undervalued'
+            );
+            renderTable(undervaluedData);
+        });
+
+        overValuedButton.addEventListener('click', () => {
+            const overvaluedData = allData.filter(stock =>
+                stock['Stock Value']?.toLowerCase() === 'overvalued'
+            );
+            renderTable(overvaluedData);
+        });
+
+        fetchData();
     </script>
 </body>
 </html>
