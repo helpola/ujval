@@ -9,24 +9,28 @@
 <body>
     <header>
         <h1>Helpola Stock Screener</h1>
+        <nav>
+            <button id="homeButton" class="nav-button">Home</button>
+            <input id="searchBar" type="text" placeholder="Search stock..." />
+        </nav>
     </header>
     <main>
-        <div class="filter-container">
+        <div class="filter-section">
             <label for="stockDropdown">Select Stock:</label>
             <select id="stockDropdown">
-                <option value="none" selected disabled>Choose a stock</option>
+                <option value="none" selected disabled>Select a stock</option>
             </select>
         </div>
         <div id="stockDetails" class="stock-details"></div>
-        <div class="button-container">
-            <button id="undervaluedButton" class="action-button">Find Under Valued Stocks</button>
-            <button id="overvaluedButton" class="action-button">Find Over Valued Stocks</button>
+        <div class="button-section">
+            <button id="undervaluedButton" class="filter-button">Show Under Valued Stocks</button>
+            <button id="overvaluedButton" class="filter-button">Show Over Valued Stocks</button>
         </div>
-        <div id="stockList" class="stock-list"></div>
+        <div id="filteredStockList" class="filtered-stock-list"></div>
     </main>
     <footer>
         <p>&copy; 2025 Helpola Stock Screener. All rights reserved.</p>
-        <p class="disclaimer">Investing in the stock market involves risk. Consult a financial advisor before making decisions.</p>
+        <p class="disclaimer">Disclaimer: Investing in the stock market involves risk. Consult a financial advisor before making any decisions.</p>
     </footer>
     <audio id="clickSound" src="click.mp3"></audio>
     <script src="script.js"></script>
