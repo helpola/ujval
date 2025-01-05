@@ -1,45 +1,75 @@
-// Link to your Google Sheet's CSV export
 const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSG2ohk3hAg5oHhi3RSeydX17ZiYYOVBKqzMEx6Ag-8yO6gJO2IeyZ8EmreIG3ROeJyRTD95TqOSU3U/pub?output=csv";
 
-// Fetch and display data from the Google Sheet
-fetch(SHEET_URL)
-    .then(response => response.text())
-    .then(data => {
-        const rows = data.split("\n").map(row => row.split(","));
-        const header = rows[0];
-        const body = rows.slice(1);
+document.addEventListener("DOMContentLoaded", () => {
+    const filterDropdown = document.getElementById("filterDropdown");
+    const tableHeader = document.getElementById("tableHeader");
+    const tbody = document.querySelector("#dataTable tbody");
+    const popup = document.getElementById("popup");
+    const popupDetails = document.getElementById("popupDetails");
+    const closeButton = document.querySelector(".close-button");
 
-        // Render header
-        const headerRow = document.getElementById("tableHeader");
-        header.forEach(column => {
-            const th = document.createElement("th");
-            th.textContent = column;
-            headerRow.appendChild(th);
-        });
+    // Fetch and process CSV data
+    fetch(SHEET_URL)
+        .then(response => response.text())
+        .then(data => {
+            const rows = data.split("\n").map(row => row.split(","));
+            const header = rows[0];
+            const body = rows.slice(1);
 
-        // Render body
-        const tbody = document.querySelector("#dataTable tbody");
-        body.forEach(row => {
-            const tr = document.createElement("tr");
-            row.forEach(cell => {
-                const td = document.createElement("td");
-                td.textContent = cell;
-                tr.appendChild(td);
+            // Populate dropdown filter and render table header
+            header.forEach((column, index) => {
+                if (column === "SYMBOL" || column === "Exchange & Symbol") return;
+
+                const option = document.createElement("option");
+                option.value = index;
+                option.textContent = column;
+                filterDropdown.appendChild(option);
+
+                const th = document.createElement("th");
+                th.textContent = column;
+                tableHeader.appendChild(th);
             });
-            tbody.appendChild(tr);
-        });
 
-        // Add filter functionality
-        const filterInput = document.getElementById("filterInput");
-        filterInput.addEventListener("keyup", () => {
-            const filterValue = filterInput.value.toLowerCase();
-            const rows = tbody.getElementsByTagName("tr");
+            // Render table body
+            body.forEach(row => {
+                const tr = document.createElement("tr");
+                row.forEach((cell, index) => {
+                    if (header[index] === "SYMBOL" || header[index] === "Exchange & Symbol") return;
 
-            Array.from(rows).forEach(row => {
-                const cells = row.getElementsByTagName("td");
-                const rowText = Array.from(cells).map(cell => cell.textContent.toLowerCase()).join(" ");
-                row.style.display = rowText.includes(filterValue) ? "" : "none";
+                    const td = document.createElement("td");
+                    td.textContent = cell;
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+
+                // Add click event for popup
+                tr.addEventListener("click", () => {
+                    popupDetails.innerHTML = row
+                        .map((cell, index) => `<p><strong>${header[index]}:</strong> ${cell}</p>`)
+                        .join("");
+                    popup.classList.remove("hidden");
+                });
             });
+        })
+        .catch(error => console.error("Error fetching data:", error));
+
+    // Filter functionality
+    filterDropdown.addEventListener("change", () => {
+        const filterIndex = filterDropdown.value === "all" ? -1 : parseInt(filterDropdown.value);
+        const rows = tbody.getElementsByTagName("tr");
+
+        Array.from(rows).forEach(row => {
+            const cells = row.getElementsByTagName("td");
+            if (filterIndex === -1 || cells[filterIndex]?.textContent) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
         });
-    })
-    .catch(error => console.error("Error fetching data:", error));
+    });
+
+    // Close popup
+    closeButton.addEventListener("click", () => {
+        popup.classList.add("hidden");
+    });
+});
