@@ -1,80 +1,50 @@
 body {
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    font-family: Arial, sans-serif;
     margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
 }
 
-.game-container {
+header {
     text-align: center;
-    color: #fff;
-    max-width: 360px; /* Adjusted width */
+    padding: 20px;
+    background: #333;
+    color: white;
+}
+
+.filter-container {
+    text-align: center;
     margin: 20px;
 }
 
-.game-title {
-    font-size: 2.5rem; /* Smaller title */
-    margin-bottom: 20px;
+#filterInput {
+    padding: 10px;
+    width: 50%;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
-.mode-selection {
-    margin-bottom: 20px;
-}
-
-.mode-btn, .restart-btn {
-    margin: 10px;
-    padding: 12px 25px; /* Adjusted padding */
-    font-size: 1rem; /* Adjusted font size */
-    cursor: pointer;
-    border: none;
-    border-radius: 8px; /* Slightly rounded corners */
-    background: #4b79a1;
-    color: white;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.4); /* Darker shadow for contrast */
-}
-
-.mode-btn:hover, .restart-btn:hover {
-    background: #5c6bc0;
-}
-
-.game-board {
-    display: grid;
-    grid-template-columns: repeat(3, 100px); /* Smaller cells */
-    grid-template-rows: repeat(3, 100px); /* Smaller cells */
-    gap: 5px;
+table {
+    width: 90%;
     margin: 20px auto;
+    border-collapse: collapse;
 }
 
-.cell {
-    width: 100px; /* Smaller cell size */
-    height: 100px; /* Smaller cell size */
-    background: rgba(255, 255, 255, 0.2); /* Increased opacity for better contrast */
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 70px; /* Adjusted font size */
-    color: #fff;
-    cursor: pointer;
-    transition: transform 0.2s, background-color 0.2s;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+table, th, td {
+    border: 1px solid #ccc;
 }
 
-.cell:hover {
-    transform: scale(1.05);
+th, td {
+    text-align: left;
+    padding: 8px;
 }
 
-.cell.x {
-    color: #ff5722; /* Bright red */
+th {
+    background-color: #f8f8f8;
 }
 
-.cell.o {
-    color: #03a9f4; /* Bright blue */
-}
-
-.restart-btn {
-    background: #ff5722;
+tr:nth-child(even) {
+    background-color: #f2f2f2;
 }
