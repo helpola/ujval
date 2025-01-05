@@ -16,53 +16,62 @@
         header {
             background-color: #0d6efd;
             padding: 1rem;
-            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; /* Allows wrapping for smaller devices */
         }
         header h1 {
             margin: 0;
             color: #ffffff;
-            display: inline-block;
+            font-size: 24px;
         }
-        #homeButton {
-            position: absolute;
-            top: 10px;
-            right: 20px;
+        header button, header .home-icon {
             background-color: #0d6efd;
-            color: #ffffff;
-            padding: 10px;
+            color: white;
+            padding: 10px 20px;
+            border: none;
             border-radius: 5px;
             cursor: pointer;
             box-shadow: 0 5px #0a58ca;
             transition: 0.3s;
         }
-        #homeButton:hover {
+        header .home-icon {
+            font-size: 20px;
+        }
+        header button:hover, header .home-icon:hover {
             background-color: #0a58ca;
         }
-        #homeButton:active {
+        header button:active, header .home-icon:active {
             box-shadow: 0 2px #0a58ca;
             transform: translateY(3px);
         }
-        .container {
-            margin: 20px auto;
-            padding: 20px;
-            max-width: 1200px;
-            background-color: #2c3e50;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        /* Flexbox styling for search box and dropdown */
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
         }
-        .dropdown, .buttons, .search-box {
+        .search-bar, .dropdown {
+            width: 50%; /* Both will take 50% width */
+        }
+        .search-bar input, select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+        }
+        .buttons {
             margin-bottom: 20px;
         }
-        select, button, input {
+        .buttons button {
             padding: 10px;
             font-size: 16px;
             margin: 5px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-        }
-        select {
-            width: 300px;
         }
         button {
             background-color: #0d6efd;
@@ -99,12 +108,20 @@
             color: #ffffff;
         }
         @media screen and (max-width: 768px) {
-            table {
-                font-size: 12px;
+            /* Stack elements vertically on smaller screens */
+            .header-controls {
+                flex-direction: column;
+                align-items: center;
             }
-            select, button, input {
+            .search-bar, .dropdown {
                 width: 100%;
                 margin-bottom: 10px;
+            }
+            header h1 {
+                font-size: 18px;
+            }
+            table {
+                font-size: 12px;
             }
         }
     </style>
@@ -112,17 +129,19 @@
 <body>
     <header>
         <h1>Helpola Stock Screener</h1>
-        <div id="homeButton">Home</div>
+        <div class="header-controls">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search by Stock Symbol or Company Name" />
+            </div>
+            <div class="dropdown">
+                <select id="stockSelector">
+                    <option value="">Select a Stock</option>
+                </select>
+            </div>
+        </div>
+        <button id="homeButton" class="home-icon">&#8962;</button> <!-- Home icon added -->
     </header>
     <div class="container">
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search by Stock Symbol or Company Name">
-        </div>
-        <div class="dropdown">
-            <select id="stockSelector">
-                <option value="">Select a Stock</option>
-            </select>
-        </div>
         <div class="buttons">
             <button id="underValuedButton">Find Under Valued Stocks</button>
             <button id="overValuedButton">Find Over Valued Stocks</button>
@@ -187,6 +206,12 @@
             const tbody = document.querySelector("#stockTable tbody");
             tbody.innerHTML = "";
             stocks.forEach(stock => {
+                // Compare Intrinsic Value with Current Price to set Stock Value
+                const currentPrice = parseFloat(stock["Current Price"]);
+                const intrinsicValue = parseFloat(stock["Intrinsic Value"]);
+                const stockValue = intrinsicValue > currentPrice ? "Under Valued" : "Over Valued";
+                stock["Stock Value"] = stockValue; // Update Stock Value column
+
                 const row = document.createElement("tr");
                 const fields = [
                     "SYMBOL", "Exchange & Symbol", "NAME OF COMPANY", "Listing Date", "Current Price", "Start Price", "End Price", "CAGR",
@@ -194,10 +219,14 @@
                 ];
                 fields.forEach(field => {
                     const cell = document.createElement("td");
-                    cell.textContent = stock[field] || "No Data";
+                    let value = stock[field] || "No Data";
+                    
+                    // Remove quotes from Market Cap value
                     if (field === "Market Cap") {
-                        cell.textContent = stock[field]?.replace(/^"|"$/g, '') || "No Data";
+                        value = value.replace(/^"|"$/g, '');  // Remove quotes around the Market Cap value
                     }
+
+                    cell.textContent = value;
                     row.appendChild(cell);
                 });
                 tbody.appendChild(row);
@@ -208,20 +237,17 @@
             return stocks.filter(stock => stock["Stock Value"] === valueType);
         }
 
-        // Search function
-        document.getElementById("searchInput").addEventListener("input", (event) => {
-            const searchTerm = event.target.value.toLowerCase();
-            const filteredStocks = stocks.filter(stock => {
-                const symbolMatch = stock["SYMBOL"].toLowerCase().includes(searchTerm);
-                const companyMatch = stock["NAME OF COMPANY"].toLowerCase().includes(searchTerm);
-                return symbolMatch || companyMatch;
+        // Search function to filter the stocks
+        function searchStocks(stocks, query) {
+            return stocks.filter(stock => {
+                const symbol = stock["SYMBOL"] ? stock["SYMBOL"].toLowerCase() : "";
+                const companyName = stock["NAME OF COMPANY"] ? stock["NAME OF COMPANY"].toLowerCase() : "";
+                return symbol.includes(query.toLowerCase()) || companyName.includes(query.toLowerCase());
             });
-            displayStockDetails(filteredStocks); // Display filtered stocks
-        });
+        }
 
-        // Home Button - Scroll to Top
         document.getElementById("homeButton").addEventListener("click", () => {
-            window.scrollTo({ top: 0, behavior: "smooth" });
+            window.location.reload(); // Reload the page to reset the screen
         });
 
         async function init() {
@@ -242,6 +268,13 @@
             document.getElementById("overValuedButton").addEventListener("click", () => {
                 const overValuedStocks = filterStocks(stocks, "Over Valued");
                 displayStockDetails(overValuedStocks);
+            });
+
+            // Event listener for the search bar
+            document.getElementById("searchInput").addEventListener("input", (event) => {
+                const query = event.target.value;
+                const filteredStocks = searchStocks(stocks, query);
+                displayStockDetails(filteredStocks);
             });
         }
 
