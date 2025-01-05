@@ -4,35 +4,160 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Helpola Stock Screener</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #1e293b;
+            padding: 20px;
+            text-align: center;
+            color: #38bdf8;
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 10px;
+            background: #1e293b;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        .filter-section {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+        }
+        .filter-section select, button {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background: #2563eb;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        button:hover, select:hover {
+            transform: scale(1.05);
+            box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #334155;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: #2563eb;
+            color: white;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background: #1e293b;
+            color: #94a3b8;
+            font-size: 0.9em;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>Helpola Stock Screener</h1>
-        <nav>
-            <button id="homeButton" class="nav-button">Home</button>
-            <input id="searchBar" type="text" placeholder="Search stock..." />
-        </nav>
-    </header>
-    <main>
+    <header>Helpola Stock Screener</header>
+    <div class="container">
         <div class="filter-section">
-            <label for="stockDropdown">Select Stock:</label>
-            <select id="stockDropdown">
-                <option value="none" selected disabled>Select a stock</option>
+            <select id="stock-selector">
+                <option value="">Select a Stock</option>
             </select>
+            <button id="under-valued-btn">Find Under Valued Stocks</button>
+            <button id="over-valued-btn">Find Over Valued Stocks</button>
         </div>
-        <div id="stockDetails" class="stock-details"></div>
-        <div class="button-section">
-            <button id="undervaluedButton" class="filter-button">Show Under Valued Stocks</button>
-            <button id="overvaluedButton" class="filter-button">Show Over Valued Stocks</button>
-        </div>
-        <div id="filteredStockList" class="filtered-stock-list"></div>
-    </main>
+        <table id="stock-details">
+            <thead>
+                <tr>
+                    <th>Listing</th>
+                    <th>Current Price</th>
+                    <th>Start Price</th>
+                    <th>End Price</th>
+                    <th>CAGR</th>
+                    <th>52 Week High</th>
+                    <th>52 Week Low</th>
+                    <th>Market Cap</th>
+                    <th>EPS</th>
+                    <th>PE</th>
+                    <th>Intrinsic Value</th>
+                    <th>Stock Value</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
     <footer>
-        <p>&copy; 2025 Helpola Stock Screener. All rights reserved.</p>
-        <p class="disclaimer">Disclaimer: Investing in the stock market involves risk. Consult a financial advisor before making any decisions.</p>
+        &copy; 2025 Helpola | Stock market investments are subject to market risks. Please read all related documents carefully before investing.
     </footer>
-    <audio id="clickSound" src="click.mp3"></audio>
-    <script src="script.js"></script>
+    <script>
+        const data = [
+            { SYMBOL: "20MICRONS", "DATE OF LISTING": "2008-06-10", "Current Price": 261.08, "Start Price": 58.75, "End Price": 92.9, "CAGR (Growth Rate)": 0.095977, "52 Week High": 348, "52 Week Low": 132, "Market Cap": "912.44 Cr", "EPS-Earn/Share": 16.72, PE: 15.62, "Intrinsic Value": 145.33, "Stock Value": "Over Valued" },
+            { SYMBOL: "360ONE", "DATE OF LISTING": "2019-09-19", "Current Price": 1290.15, "Start Price": "No Data", "End Price": "No Data", "CAGR (Growth Rate)": "No Data", "52 Week High": 1312.1, "52 Week Low": 591.5, "Market Cap": "50,093.52 Cr", "EPS-Earn/Share": 24.7, PE: 52.23, "Intrinsic Value": "No Data", "Stock Value": "Over Valued" },
+        ];
+
+        const stockSelector = document.getElementById('stock-selector');
+        const tableBody = document.querySelector('#stock-details tbody');
+        const underValuedBtn = document.getElementById('under-valued-btn');
+        const overValuedBtn = document.getElementById('over-valued-btn');
+
+        function populateDropdown() {
+            data.forEach(stock => {
+                const option = document.createElement('option');
+                option.value = stock.SYMBOL;
+                option.textContent = stock.SYMBOL;
+                stockSelector.appendChild(option);
+            });
+        }
+
+        function displayStockDetails(stock) {
+            tableBody.innerHTML = '';
+            const row = document.createElement('tr');
+            Object.values(stock).forEach(value => {
+                const cell = document.createElement('td');
+                cell.textContent = value;
+                row.appendChild(cell);
+            });
+            tableBody.appendChild(row);
+        }
+
+        function filterStocks(criteria) {
+            tableBody.innerHTML = '';
+            const filteredStocks = data.filter(stock => stock['Stock Value'] === criteria);
+            filteredStocks.forEach(stock => {
+                const row = document.createElement('tr');
+                Object.values(stock).forEach(value => {
+                    const cell = document.createElement('td');
+                    cell.textContent = value;
+                    row.appendChild(cell);
+                });
+                tableBody.appendChild(row);
+            });
+        }
+
+        stockSelector.addEventListener('change', () => {
+            const selectedSymbol = stockSelector.value;
+            const selectedStock = data.find(stock => stock.SYMBOL === selectedSymbol);
+            if (selectedStock) displayStockDetails(selectedStock);
+        });
+
+        underValuedBtn.addEventListener('click', () => filterStocks('Under Valued'));
+        overValuedBtn.addEventListener('click', () => filterStocks('Over Valued'));
+
+        populateDropdown();
+    </script>
 </body>
 </html>
