@@ -3,16 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Sheet Filter</title>
+    <title>Professional Stock Data Viewer</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>Google Sheet Data Filter</h1>
+        <h1>Stock Data Viewer</h1>
     </header>
     <main>
         <div class="filter-container">
-            <input type="text" id="filterInput" placeholder="Type to filter..." />
+            <label for="filterDropdown">Filter by Heading:</label>
+            <select id="filterDropdown">
+                <option value="all">All</option>
+                <!-- Dropdown options will be dynamically populated -->
+            </select>
         </div>
         <table id="dataTable">
             <thead>
@@ -25,6 +29,18 @@
             </tbody>
         </table>
     </main>
+
+    <!-- Popup for stock details -->
+    <div id="popup" class="hidden">
+        <div class="popup-content">
+            <span class="close-button">&times;</span>
+            <h2>Stock Details</h2>
+            <div id="popupDetails">
+                <!-- Details will populate dynamically -->
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
