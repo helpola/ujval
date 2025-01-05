@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Stock Data Viewer</title>
+    <title>Stock Data Viewer</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>Stock Data Viewer</h1>
+        <h1>Stock Market Dashboard</h1>
     </header>
     <main>
         <div class="filter-container">
-            <label for="filterDropdown">Filter by Heading:</label>
+            <label for="filterDropdown">Filter By:</label>
             <select id="filterDropdown">
                 <option value="all">All</option>
-                <!-- Dropdown options will be dynamically populated -->
+                <!-- Options will be dynamically populated -->
             </select>
         </div>
         <table id="dataTable">
@@ -30,17 +30,21 @@
         </table>
     </main>
 
-    <!-- Popup for stock details -->
-    <div id="popup" class="hidden">
-        <div class="popup-content">
-            <span class="close-button">&times;</span>
+    <!-- Modal for Stock Details -->
+    <div id="stockModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
             <h2>Stock Details</h2>
-            <div id="popupDetails">
-                <!-- Details will populate dynamically -->
-            </div>
+            <div id="stockDetails"></div>
         </div>
     </div>
 
+    <footer>
+        <p>&copy; 2025 Stock Market Dashboard. All rights reserved.</p>
+        <p class="disclaimer">
+            Stock trading involves risks. Please do your own research before making any investment decisions.
+        </p>
+    </footer>
     <script src="script.js"></script>
 </body>
 </html>
