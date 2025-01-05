@@ -3,29 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Helpola - Futuristic Tic Tac Toe</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Google Sheet Filter</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="game-container">
-        <h1 class="game-title">Tic Tac Toe</h1>
-        <div class="mode-selection">
-            <button id="singleplayer-btn" class="mode-btn">Single Player</button>
-            <button id="multiplayer-btn" class="mode-btn">Multiplayer</button>
+    <header>
+        <h1>Google Sheet Data Filter</h1>
+    </header>
+    <main>
+        <div class="filter-container">
+            <input type="text" id="filterInput" placeholder="Type to filter..." />
         </div>
-        <div class="game-board">
-            <div id="cell-0" class="cell"></div>
-            <div id="cell-1" class="cell"></div>
-            <div id="cell-2" class="cell"></div>
-            <div id="cell-3" class="cell"></div>
-            <div id="cell-4" class="cell"></div>
-            <div id="cell-5" class="cell"></div>
-            <div id="cell-6" class="cell"></div>
-            <div id="cell-7" class="cell"></div>
-            <div id="cell-8" class="cell"></div>
-        </div>
-        <button id="restart-button" class="restart-btn">Start a New Game</button>
-    </div>
+        <table id="dataTable">
+            <thead>
+                <tr id="tableHeader">
+                    <!-- Headers will load dynamically -->
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will load dynamically -->
+            </tbody>
+        </table>
+    </main>
     <script src="script.js"></script>
 </body>
 </html>
