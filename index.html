@@ -49,6 +49,9 @@
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
         }
+        .search-bar {
+            margin-bottom: 20px;
+        }
         .dropdown, .buttons {
             margin-bottom: 20px;
         }
@@ -114,6 +117,9 @@
         <button id="homeButton">Home</button>
     </header>
     <div class="container">
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search by Stock Symbol or Company Name" />
+        </div>
         <div class="dropdown">
             <select id="stockSelector">
                 <option value="">Select a Stock</option>
@@ -196,7 +202,14 @@
                 ];
                 fields.forEach(field => {
                     const cell = document.createElement("td");
-                    cell.textContent = stock[field] || "No Data";
+                    let value = stock[field] || "No Data";
+                    
+                    // Remove quotes from Market Cap value
+                    if (field === "Market Cap") {
+                        value = value.replace(/^"|"$/g, '');  // Remove quotes around the Market Cap value
+                    }
+
+                    cell.textContent = value;
                     row.appendChild(cell);
                 });
                 tbody.appendChild(row);
@@ -205,6 +218,15 @@
 
         function filterStocks(stocks, valueType) {
             return stocks.filter(stock => stock["Stock Value"] === valueType);
+        }
+
+        // Search function to filter the stocks
+        function searchStocks(stocks, query) {
+            return stocks.filter(stock => {
+                const symbol = stock["SYMBOL"] ? stock["SYMBOL"].toLowerCase() : "";
+                const companyName = stock["NAME OF COMPANY"] ? stock["NAME OF COMPANY"].toLowerCase() : "";
+                return symbol.includes(query.toLowerCase()) || companyName.includes(query.toLowerCase());
+            });
         }
 
         document.getElementById("homeButton").addEventListener("click", () => {
@@ -229,6 +251,13 @@
             document.getElementById("overValuedButton").addEventListener("click", () => {
                 const overValuedStocks = filterStocks(stocks, "Over Valued");
                 displayStockDetails(overValuedStocks);
+            });
+
+            // Event listener for the search bar
+            document.getElementById("searchInput").addEventListener("input", (event) => {
+                const query = event.target.value;
+                const filteredStocks = searchStocks(stocks, query);
+                displayStockDetails(filteredStocks);
             });
         }
 
