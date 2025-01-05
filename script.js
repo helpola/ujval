@@ -1,6 +1,13 @@
 const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSG2ohk3hAg5oHhi3RSeydX17ZiYYOVBKqzMEx6Ag-8yO6gJO2IeyZ8EmreIG3ROeJyRTD95TqOSU3U/pub?output=csv";
 
-// Fetch and process Google Sheet data
+const stockDropdown = document.getElementById("stockDropdown");
+const stockDetails = document.getElementById("stockDetails");
+const undervaluedButton = document.getElementById("undervaluedButton");
+const overvaluedButton = document.getElementById("overvaluedButton");
+const stockList = document.getElementById("stockList");
+const clickSound = document.getElementById("clickSound");
+
+// Fetch and process data
 fetch(SHEET_URL)
     .then(response => response.text())
     .then(data => {
@@ -8,76 +15,43 @@ fetch(SHEET_URL)
         const headers = rows[0];
         const body = rows.slice(1);
 
-        // Populate dropdown and headers
-        const headingFilter = document.getElementById("headingFilter");
-        const tableHeader = document.getElementById("tableHeader");
-        headers.forEach((header, index) => {
-            const th = document.createElement("th");
-            th.textContent = header;
-            tableHeader.appendChild(th);
-
-            if (index > 1) { // Add to dropdown except first two
-                const option = document.createElement("option");
-                option.value = header;
-                option.textContent = header;
-                headingFilter.appendChild(option);
-            }
-        });
-
-        // Populate table rows
-        const tbody = document.querySelector("#dataTable tbody");
+        // Populate dropdown
         body.forEach(row => {
-            const tr = document.createElement("tr");
-            row.forEach(cell => {
-                const td = document.createElement("td");
-                td.textContent = cell;
-                tr.appendChild(td);
-            });
-            tbody.appendChild(tr);
+            const option = document.createElement("option");
+            option.value = row[0]; // Stock name
+            option.textContent = row[0];
+            stockDropdown.appendChild(option);
         });
 
-        // Add filter functionality
-        headingFilter.addEventListener("change", () => filterData(headers, body));
-        document.getElementById("valuationFilter").addEventListener("change", () => filterValuation(headers, body));
+        // Display stock details on selection
+        stockDropdown.addEventListener("change", () => {
+            const selectedStock = stockDropdown.value;
+            clickSound.play();
+            const stockData = body.find(row => row[0] === selectedStock);
+            stockDetails.innerHTML = `
+                <h2>${stockData[0]}</h2>
+                <p>Start Price: ${stockData[1]}</p>
+                <p>End Price: ${stockData[2]}</p>
+                <p>PE Ratio: ${stockData[3]}</p>
+                <p>Other Details: ${stockData.slice(4).join(", ")}</p>
+            `;
+        });
+
+        // Filter undervalued and overvalued stocks
+        undervaluedButton.addEventListener("click", () => filterStocks(body, headers, "undervalued"));
+        overvaluedButton.addEventListener("click", () => filterStocks(body, headers, "overvalued"));
     })
     .catch(error => console.error("Error fetching data:", error));
 
-// Filter by heading
-function filterData(headers, body) {
-    const headingFilter = document.getElementById("headingFilter").value;
-    const tbody = document.querySelector("#dataTable tbody");
-    tbody.innerHTML = ""; // Clear table
-
-    const index = headers.indexOf(headingFilter);
-    body.forEach(row => {
-        const tr = document.createElement("tr");
-        row.forEach((cell, i) => {
-            if (index === -1 || i === index || index === 0) {
-                const td = document.createElement("td");
-                td.textContent = cell;
-                tr.appendChild(td);
-            }
-        });
-        tbody.appendChild(tr);
-    });
-}
-
-// Filter overvalued/undervalued
-function filterValuation(headers, body) {
-    const valuationFilter = document.getElementById("valuationFilter").value;
-    const valueIndex = headers.indexOf("Valuation"); // Assuming "Valuation" exists
-    const tbody = document.querySelector("#dataTable tbody");
-    tbody.innerHTML = ""; // Clear table
-
-    body.forEach(row => {
-        if (valuationFilter === "all" || row[valueIndex].toLowerCase().includes(valuationFilter)) {
-            const tr = document.createElement("tr");
-            row.forEach(cell => {
-                const td = document.createElement("td");
-                td.textContent = cell;
-                tr.appendChild(td);
-            });
-            tbody.appendChild(tr);
-        }
+// Filter stocks
+function filterStocks(body, headers, type) {
+    clickSound.play();
+    const valuationIndex = headers.indexOf("Valuation");
+    stockList.innerHTML = `<h3>${type === "undervalued" ? "Under Valued" : "Over Valued"} Stocks</h3>`;
+    const filteredStocks = body.filter(row => row[valuationIndex].toLowerCase().includes(type));
+    filteredStocks.forEach(stock => {
+        const stockItem = document.createElement("p");
+        stockItem.textContent = stock[0];
+        stockList.appendChild(stockItem);
     });
 }
