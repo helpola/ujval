@@ -28,12 +28,20 @@ fetch(SHEET_URL)
             const selectedStock = stockDropdown.value;
             clickSound.play();
             const stockData = body.find(row => row[0] === selectedStock);
+
             stockDetails.innerHTML = `
                 <h2>${stockData[0]}</h2>
-                <p>Start Price: ${stockData[1]}</p>
-                <p>End Price: ${stockData[2]}</p>
-                <p>PE Ratio: ${stockData[3]}</p>
-                <p>Other Details: ${stockData.slice(4).join(", ")}</p>
+                <p><strong>Current Price:</strong> ${stockData[1]}</p>
+                <p><strong>Start Price:</strong> ${stockData[2]}</p>
+                <p><strong>End Price:</strong> ${stockData[3]}</p>
+                <p><strong>CAGR (Growth Rate):</strong> ${stockData[4]}</p>
+                <p><strong>52 Week High:</strong> ${stockData[5]}</p>
+                <p><strong>52 Week Low:</strong> ${stockData[6]}</p>
+                <p><strong>Market Cap:</strong> ${stockData[7]}</p>
+                <p><strong>EPS (Earnings per Share):</strong> ${stockData[8]}</p>
+                <p><strong>PE Ratio:</strong> ${stockData[9]}</p>
+                <p><strong>Intrinsic Value:</strong> ${stockData[10]}</p>
+                <p><strong>Stock Value:</strong> ${stockData[11]}</p>
             `;
         });
 
@@ -46,7 +54,7 @@ fetch(SHEET_URL)
 // Filter stocks
 function filterStocks(body, headers, type) {
     clickSound.play();
-    const valuationIndex = headers.indexOf("Valuation");
+    const valuationIndex = headers.indexOf("Stock Value");
     stockList.innerHTML = `<h3>${type === "undervalued" ? "Under Valued" : "Over Valued"} Stocks</h3>`;
     const filteredStocks = body.filter(row => row[valuationIndex].toLowerCase().includes(type));
     filteredStocks.forEach(stock => {
