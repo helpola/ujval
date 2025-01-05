@@ -3,50 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Screener</title>
+    <title>Helpola Stock Screener</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>Stock Screener Dashboard</h1>
-        <p>Analyze stocks with advanced filters and insights.</p>
+        <h1>Helpola Stock Screener</h1>
     </header>
     <main>
         <div class="filter-container">
-            <div class="filter-group">
-                <label for="headingFilter">Filter by Heading:</label>
-                <select id="headingFilter">
-                    <option value="all">All</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label for="valuationFilter">Valuation:</label>
-                <select id="valuationFilter">
-                    <option value="all">All</option>
-                    <option value="overvalued">Overvalued</option>
-                    <option value="undervalued">Undervalued</option>
-                </select>
-            </div>
+            <label for="stockDropdown">Select Stock:</label>
+            <select id="stockDropdown">
+                <option value="none" selected disabled>Choose a stock</option>
+            </select>
         </div>
-        <div class="table-container">
-            <table id="dataTable">
-                <thead>
-                    <tr id="tableHeader">
-                        <!-- Dynamic Headers -->
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Dynamic Rows -->
-                </tbody>
-            </table>
+        <div id="stockDetails" class="stock-details"></div>
+        <div class="button-container">
+            <button id="undervaluedButton" class="action-button">Find Under Valued Stocks</button>
+            <button id="overvaluedButton" class="action-button">Find Over Valued Stocks</button>
         </div>
+        <div id="stockList" class="stock-list"></div>
     </main>
     <footer>
-        <p>&copy; 2025 Stock Screener. All rights reserved.</p>
-        <p class="disclaimer">
-            Investments in the stock market are subject to risks. Please consult your financial advisor before investing.
-        </p>
+        <p>&copy; 2025 Helpola Stock Screener. All rights reserved.</p>
+        <p class="disclaimer">Investing in the stock market involves risk. Consult a financial advisor before making decisions.</p>
     </footer>
+    <audio id="clickSound" src="click.mp3"></audio>
     <script src="script.js"></script>
 </body>
 </html>
