@@ -29,17 +29,32 @@
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
         }
-        .dropdown {
+        .dropdown, .buttons {
             margin-bottom: 20px;
         }
-        select {
+        select, button {
             padding: 10px;
             font-size: 16px;
             margin: 5px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+        }
+        select {
             width: 300px;
+        }
+        button {
+            background-color: #0d6efd;
+            color: #ffffff;
+            box-shadow: 0 5px #0a58ca;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #0a58ca;
+        }
+        button:active {
+            box-shadow: 0 2px #0a58ca;
+            transform: translateY(3px);
         }
         table {
             width: 100%;
@@ -72,6 +87,10 @@
             <select id="stockSelector">
                 <option value="">Select a Stock</option>
             </select>
+        </div>
+        <div class="buttons">
+            <button id="underValuedButton">Find Under Valued Stocks</button>
+            <button id="overValuedButton">Find Over Valued Stocks</button>
         </div>
         <table id="stockTable">
             <thead>
@@ -112,7 +131,7 @@
             const stockData = rows.slice(1).map(row => {
                 const stock = {};
                 row.forEach((value, index) => {
-                    stock[headers[index].trim()] = value.trim();
+                    stock[headers[index]] = value.trim();
                 });
                 return stock;
             });
@@ -122,7 +141,7 @@
         function populateDropdown(stocks) {
             const stockSelector = document.getElementById("stockSelector");
             stocks.forEach(stock => {
-                if (stock["NAME OF COMPANY"] !== "No Data") {
+                if (stock["NAME OF COMPANY"] && stock["NAME OF COMPANY"] !== "No Data") {
                     const option = document.createElement("option");
                     option.value = stock["SYMBOL"];
                     option.textContent = stock["NAME OF COMPANY"];
@@ -131,32 +150,49 @@
             });
         }
 
-        function displayStockDetails(stock) {
+        function displayStockDetails(stocks) {
             const tbody = document.querySelector("#stockTable tbody");
             tbody.innerHTML = "";
-            const row = document.createElement("tr");
-            const fields = [
-                "SYMBOL", "Exchange & Symbol", "NAME OF COMPANY", "DATE OF LISTING", "Current Price", 
-                "Start Price", "End Price", "CAGR (Growth Rate)", "52 Week high", "52 Week Low", 
-                "Market Cap", "EPS-Earn/ Share", "PE", "Intrinsic Value", "Stock Value"
-            ];
-            fields.forEach(field => {
-                const cell = document.createElement("td");
-                cell.textContent = stock[field] || "N/A";
-                row.appendChild(cell);
+            stocks.forEach(stock => {
+                const row = document.createElement("tr");
+                const fields = [
+                    "SYMBOL", "Exchange & Symbol", "NAME OF COMPANY", "Listing Date", "Current Price", "Start Price", "End Price", "CAGR",
+                    "52 Week High", "52 Week Low", "Market Cap", "EPS", "PE", "Intrinsic Value", "Stock Value"
+                ];
+                fields.forEach(field => {
+                    const cell = document.createElement("td");
+                    cell.textContent = stock[field] || "N/A";
+                    row.appendChild(cell);
+                });
+                tbody.appendChild(row);
             });
-            tbody.appendChild(row);
         }
 
-        document.getElementById("stockSelector").addEventListener("change", async (event) => {
-            const stocks = await fetchData();
-            const selectedStock = stocks.find(stock => stock["SYMBOL"] === event.target.value);
-            if (selectedStock) displayStockDetails(selectedStock);
-        });
+        function filterStocks(stocks, valueType) {
+            return stocks.filter(stock => stock["Stock Value"] === valueType);
+        }
 
         async function init() {
             const stocks = await fetchData();
             populateDropdown(stocks);
+
+            // Display all stock details initially
+            displayStockDetails(stocks);
+
+            document.getElementById("stockSelector").addEventListener("change", (event) => {
+                const selectedStock = stocks.find(stock => stock["SYMBOL"] === event.target.value);
+                if (selectedStock) displayStockDetails([selectedStock]);
+            });
+
+            document.getElementById("underValuedButton").addEventListener("click", () => {
+                const underValuedStocks = filterStocks(stocks, "Under Valued");
+                displayStockDetails(underValuedStocks);
+            });
+
+            document.getElementById("overValuedButton").addEventListener("click", () => {
+                const overValuedStocks = filterStocks(stocks, "Over Valued");
+                displayStockDetails(overValuedStocks);
+            });
         }
 
         init();
