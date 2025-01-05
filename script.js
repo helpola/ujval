@@ -4,7 +4,7 @@ const stockDropdown = document.getElementById("stockDropdown");
 const stockDetails = document.getElementById("stockDetails");
 const undervaluedButton = document.getElementById("undervaluedButton");
 const overvaluedButton = document.getElementById("overvaluedButton");
-const stockList = document.getElementById("stockList");
+const filteredStockList = document.getElementById("filteredStockList");
 const clickSound = document.getElementById("clickSound");
 
 // Fetch and process data
@@ -23,43 +23,46 @@ fetch(SHEET_URL)
             stockDropdown.appendChild(option);
         });
 
-        // Display stock details on selection
+        // Display stock details
         stockDropdown.addEventListener("change", () => {
             const selectedStock = stockDropdown.value;
             clickSound.play();
             const stockData = body.find(row => row[0] === selectedStock);
-
-            stockDetails.innerHTML = `
-                <h2>${stockData[0]}</h2>
-                <p><strong>Current Price:</strong> ${stockData[1]}</p>
-                <p><strong>Start Price:</strong> ${stockData[2]}</p>
-                <p><strong>End Price:</strong> ${stockData[3]}</p>
-                <p><strong>CAGR (Growth Rate):</strong> ${stockData[4]}</p>
-                <p><strong>52 Week High:</strong> ${stockData[5]}</p>
-                <p><strong>52 Week Low:</strong> ${stockData[6]}</p>
-                <p><strong>Market Cap:</strong> ${stockData[7]}</p>
-                <p><strong>EPS (Earnings per Share):</strong> ${stockData[8]}</p>
-                <p><strong>PE Ratio:</strong> ${stockData[9]}</p>
-                <p><strong>Intrinsic Value:</strong> ${stockData[10]}</p>
-                <p><strong>Stock Value:</strong> ${stockData[11]}</p>
-            `;
+            if (stockData) {
+                stockDetails.innerHTML = `
+                    <h2>${selectedStock}</h2>
+                    <p><strong>Current Price:</strong> ${stockData[1]}</p>
+                    <p><strong>Start Price:</strong> ${stockData[2]}</p>
+                    <p><strong>End Price:</strong> ${stockData[3]}</p>
+                    <p><strong>CAGR:</strong> ${stockData[4]}</p>
+                    <p><strong>52 Week High:</strong> ${stockData[5]}</p>
+                    <p><strong>52 Week Low:</strong> ${stockData[6]}</p>
+                    <p><strong>Market Cap:</strong> ${stockData[7]}</p>
+                    <p><strong>EPS:</strong> ${stockData[8]}</p>
+                    <p><strong>Intrinsic Value:</strong> ${stockData[10]}</p>
+                    <p><strong>Stock Value:</strong> ${stockData[11]}</p>
+                `;
+            }
         });
 
-        // Filter undervalued and overvalued stocks
-        undervaluedButton.addEventListener("click", () => filterStocks(body, headers, "undervalued"));
-        overvaluedButton.addEventListener("click", () => filterStocks(body, headers, "overvalued"));
+        // Filters
+        undervaluedButton.addEventListener("click", () => filterStocks(body, "under"));
+        overvaluedButton.addEventListener("click", () => filterStocks(body, "over"));
     })
     .catch(error => console.error("Error fetching data:", error));
 
 // Filter stocks
-function filterStocks(body, headers, type) {
+function filterStocks(body, valueType) {
     clickSound.play();
-    const valuationIndex = headers.indexOf("Stock Value");
-    stockList.innerHTML = `<h3>${type === "undervalued" ? "Under Valued" : "Over Valued"} Stocks</h3>`;
-    const filteredStocks = body.filter(row => row[valuationIndex].toLowerCase().includes(type));
-    filteredStocks.forEach(stock => {
-        const stockItem = document.createElement("p");
-        stockItem.textContent = stock[0];
-        stockList.appendChild(stockItem);
+    const stockList = body.filter(stock => stock[11].toLowerCase().includes(valueType));
+    filteredStockList.innerHTML = `<h3>${valueType === "under" ? "Under Valued Stocks" : "Over Valued Stocks"}</h3>`;
+    stockList.forEach(stock => {
+        filteredStockList.innerHTML += `
+            <div>
+                <p><strong>${stock[0]}</strong></p>
+                <p>Current Price: ${stock[1]}</p>
+                <p>PE Ratio: ${stock[8]}</p>
+            </div>
+        `;
     });
 }
