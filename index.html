@@ -3,46 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Data Viewer</title>
+    <title>Stock Screener</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>Stock Market Dashboard</h1>
+        <h1>Stock Screener Dashboard</h1>
+        <p>Analyze stocks with advanced filters and insights.</p>
     </header>
     <main>
         <div class="filter-container">
-            <label for="filterDropdown">Filter By:</label>
-            <select id="filterDropdown">
-                <option value="all">All</option>
-                <!-- Options will be dynamically populated -->
-            </select>
+            <div class="filter-group">
+                <label for="headingFilter">Filter by Heading:</label>
+                <select id="headingFilter">
+                    <option value="all">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="valuationFilter">Valuation:</label>
+                <select id="valuationFilter">
+                    <option value="all">All</option>
+                    <option value="overvalued">Overvalued</option>
+                    <option value="undervalued">Undervalued</option>
+                </select>
+            </div>
         </div>
-        <table id="dataTable">
-            <thead>
-                <tr id="tableHeader">
-                    <!-- Headers will load dynamically -->
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Data will load dynamically -->
-            </tbody>
-        </table>
+        <div class="table-container">
+            <table id="dataTable">
+                <thead>
+                    <tr id="tableHeader">
+                        <!-- Dynamic Headers -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dynamic Rows -->
+                </tbody>
+            </table>
+        </div>
     </main>
-
-    <!-- Modal for Stock Details -->
-    <div id="stockModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h2>Stock Details</h2>
-            <div id="stockDetails"></div>
-        </div>
-    </div>
-
     <footer>
-        <p>&copy; 2025 Stock Market Dashboard. All rights reserved.</p>
+        <p>&copy; 2025 Stock Screener. All rights reserved.</p>
         <p class="disclaimer">
-            Stock trading involves risks. Please do your own research before making any investment decisions.
+            Investments in the stock market are subject to risks. Please consult your financial advisor before investing.
         </p>
     </footer>
     <script src="script.js"></script>
