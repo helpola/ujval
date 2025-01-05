@@ -41,12 +41,17 @@ header h1 {
     color: #14233b;
 }
 
-.stock-details, .stock-list {
+.stock-details {
     margin-top: 20px;
     background: #14233b;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: left;
+}
+
+.stock-details h2, .stock-details p {
+    margin: 10px;
 }
 
 .action-button {
