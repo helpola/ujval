@@ -63,6 +63,8 @@
             border-radius: 5px;
         }
         .buttons {
+            display: flex;
+            justify-content: center;
             margin-bottom: 20px;
         }
         .buttons button {
@@ -72,6 +74,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            width: 45%; /* Set width to 45% to ensure they fit side by side */
         }
         button {
             background-color: #0d6efd;
@@ -107,6 +110,29 @@
             background-color: #0d6efd;
             color: #ffffff;
         }
+
+        /* Floating Home button */
+        .home-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: #0d6efd;
+            padding: 15px;
+            border-radius: 50%;
+            font-size: 24px;
+            color: white;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .home-button:hover {
+            background-color: #0a58ca;
+        }
+        .home-button:active {
+            transform: translateY(3px);
+        }
+
+        /* Responsive Design */
         @media screen and (max-width: 768px) {
             /* Stack elements vertically on smaller screens */
             .header-controls {
@@ -114,6 +140,14 @@
                 align-items: center;
             }
             .search-bar, .dropdown {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            .buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            .buttons button {
                 width: 100%;
                 margin-bottom: 10px;
             }
@@ -139,8 +173,10 @@
                 </select>
             </div>
         </div>
-        <button id="homeButton" class="home-icon">&#8962;</button> <!-- Home icon added -->
     </header>
+    
+    <button class="home-button" id="homeButton">&#8962;</button> <!-- Floating Home Icon -->
+
     <div class="container">
         <div class="buttons">
             <button id="underValuedButton">Find Under Valued Stocks</button>
@@ -237,19 +273,6 @@
             return stocks.filter(stock => stock["Stock Value"] === valueType);
         }
 
-        // Search function to filter the stocks
-        function searchStocks(stocks, query) {
-            return stocks.filter(stock => {
-                const symbol = stock["SYMBOL"] ? stock["SYMBOL"].toLowerCase() : "";
-                const companyName = stock["NAME OF COMPANY"] ? stock["NAME OF COMPANY"].toLowerCase() : "";
-                return symbol.includes(query.toLowerCase()) || companyName.includes(query.toLowerCase());
-            });
-        }
-
-        document.getElementById("homeButton").addEventListener("click", () => {
-            window.location.reload(); // Reload the page to reset the screen
-        });
-
         async function init() {
             const stocks = await fetchData();
             populateDropdown(stocks);
@@ -268,13 +291,6 @@
             document.getElementById("overValuedButton").addEventListener("click", () => {
                 const overValuedStocks = filterStocks(stocks, "Over Valued");
                 displayStockDetails(overValuedStocks);
-            });
-
-            // Event listener for the search bar
-            document.getElementById("searchInput").addEventListener("input", (event) => {
-                const query = event.target.value;
-                const filteredStocks = searchStocks(stocks, query);
-                displayStockDetails(filteredStocks);
             });
         }
 
