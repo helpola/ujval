@@ -19,13 +19,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap; /* Ensures responsiveness */
+            flex-wrap: wrap; /* Allows wrapping for smaller devices */
         }
         header h1 {
             margin: 0;
             color: #ffffff;
+            font-size: 24px;
         }
-        header button {
+        header button, header .home-icon {
             background-color: #0d6efd;
             color: white;
             padding: 10px 20px;
@@ -35,18 +36,24 @@
             box-shadow: 0 5px #0a58ca;
             transition: 0.3s;
         }
-        header button:hover {
+        header .home-icon {
+            font-size: 20px;
+        }
+        header button:hover, header .home-icon:hover {
             background-color: #0a58ca;
         }
-        header button:active {
+        header button:active, header .home-icon:active {
             box-shadow: 0 2px #0a58ca;
             transform: translateY(3px);
         }
-        /* Style for search box and dropdown */
+        /* Flexbox styling for search box and dropdown */
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
         .search-bar, .dropdown {
-            display: inline-block;
-            width: 48%;
-            margin-bottom: 20px;
+            width: 48%; /* Both will take 48% width */
         }
         .search-bar input, select {
             width: 100%;
@@ -101,6 +108,11 @@
             color: #ffffff;
         }
         @media screen and (max-width: 768px) {
+            /* Stack elements vertically on smaller screens */
+            .header-controls {
+                flex-direction: column;
+                align-items: center;
+            }
             .search-bar, .dropdown {
                 width: 100%;
                 margin-bottom: 10px;
@@ -117,15 +129,17 @@
 <body>
     <header>
         <h1>Helpola Stock Screener</h1>
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Search by Stock Symbol or Company Name" />
+        <div class="header-controls">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search by Stock Symbol or Company Name" />
+            </div>
+            <div class="dropdown">
+                <select id="stockSelector">
+                    <option value="">Select a Stock</option>
+                </select>
+            </div>
         </div>
-        <div class="dropdown">
-            <select id="stockSelector">
-                <option value="">Select a Stock</option>
-            </select>
-        </div>
-        <button id="homeButton">Home</button>
+        <button id="homeButton" class="home-icon">&#8962;</button> <!-- Home icon added -->
     </header>
     <div class="container">
         <div class="buttons">
