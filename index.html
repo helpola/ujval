@@ -4,57 +4,159 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Helpola Stock Screener</title>
-    <link rel="stylesheet" href="styles.css">
+    <!-- Link to external Google Fonts and icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #1c1c38, #4a90e2);
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        header {
+            background: #142850;
+            color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        header h1 {
+            font-size: 36px;
+            margin: 0;
+        }
+        .header-controls {
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .header-controls input, .header-controls select {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 16px;
+        }
+        .buttons {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .buttons button {
+            background: linear-gradient(135deg, #4a90e2, #1c7ed6);
+            border: none;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .buttons button:hover {
+            transform: scale(1.1);
+            background: #1c7ed6;
+        }
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            border-radius: 10px;
+        }
+        th, td {
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            color: #ffffff;
+        }
+        th {
+            background: #142850;
+        }
+        .hidden-column {
+            display: none;
+        }
+        footer {
+            margin-top: 20px;
+            background: #142850;
+            padding: 10px;
+            color: #ffffff;
+            font-size: 14px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        tr {
+            animation: fadeIn 0.5s ease;
+        }
+        @media (max-width: 768px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+                width: 100%;
+            }
+            tr {
+                margin-bottom: 15px;
+            }
+            th, td {
+                text-align: left;
+                padding-left: 50%;
+                position: relative;
+            }
+            th::before, td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                width: 45%;
+                padding-left: 15px;
+                font-weight: bold;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
-        <div class="header-content">
-            <h1>Helpola Stock Screener</h1>
-            <button id="homeButton" class="home-icon">&#8962;</button>
-        </div>
+        <h1>Helpola Stock Screener</h1>
         <div class="header-controls">
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Search by Stock Symbol or Company Name" />
-            </div>
-            <div class="dropdown">
-                <select id="stockSelector">
-                    <option value="">Select a Stock</option>
-                </select>
-            </div>
+            <input type="text" id="searchInput" placeholder="Search by Stock Symbol or Company Name" />
+            <select id="stockSelector">
+                <option value="">Select a Stock</option>
+            </select>
         </div>
     </header>
-    <main>
-        <div class="container">
-            <div class="buttons">
-                <button id="underValuedButton" class="animated-btn">Find Under Valued Stocks</button>
-                <button id="overValuedButton" class="animated-btn">Find Over Valued Stocks</button>
-            </div>
-            <div class="table-container">
-                <table id="stockTable">
-                    <thead>
-                        <tr>
-                            <th class="hidden-column">SYMBOL</th>
-                            <th class="hidden-column">Exchange & Symbol</th>
-                            <th>NAME OF COMPANY</th>
-                            <th class="hidden-column">Listing Date</th>
-                            <th>Current Price</th>
-                            <th>Start Price</th>
-                            <th>End Price</th>
-                            <th>CAGR</th>
-                            <th>52 Week High</th>
-                            <th>52 Week Low</th>
-                            <th>Market Cap</th>
-                            <th>EPS</th>
-                            <th>PE</th>
-                            <th>Intrinsic Value</th>
-                            <th>Stock Value</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
+    <div class="container">
+        <div class="buttons">
+            <button id="underValuedButton">Find Under Valued Stocks</button>
+            <button id="overValuedButton">Find Over Valued Stocks</button>
         </div>
-    </main>
+        <table id="stockTable">
+            <thead>
+                <tr>
+                    <th class="hidden-column" data-label="SYMBOL">SYMBOL</th>
+                    <th class="hidden-column" data-label="Exchange & Symbol">Exchange & Symbol</th>
+                    <th data-label="NAME OF COMPANY">NAME OF COMPANY</th>
+                    <th class="hidden-column" data-label="Listing Date">Listing Date</th>
+                    <th data-label="Current Price">Current Price</th>
+                    <th data-label="Start Price">Start Price</th>
+                    <th data-label="End Price">End Price</th>
+                    <th data-label="CAGR">CAGR</th>
+                    <th data-label="52 Week High">52 Week High</th>
+                    <th data-label="52 Week Low">52 Week Low</th>
+                    <th data-label="Market Cap">Market Cap (Cr)</th>
+                    <th data-label="EPS">EPS</th>
+                    <th data-label="PE">PE</th>
+                    <th data-label="Intrinsic Value">Intrinsic Value</th>
+                    <th data-label="Stock Value">Stock Value</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
     <footer>
         <p>© 2025 Helpola Stock Screener. All Rights Reserved.</p>
         <p>Disclaimer: Investing in stocks involves risks. Please consult a financial advisor before investing.</p>
