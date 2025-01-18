@@ -4,132 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Helpola Stock Screener</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #1e2a38;
-            color: #ffffff;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-        }
-        header {
-            background-color: #0d6efd;
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        header h1 {
-            margin: 0;
-            color: #ffffff;
-            font-size: 24px;
-        }
-        header button, header .home-icon {
-            background-color: #0d6efd;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            box-shadow: 0 5px #0a58ca;
-            transition: 0.3s;
-        }
-        header .home-icon {
-            font-size: 20px;
-        }
-        header button:hover, header .home-icon:hover {
-            background-color: #0a58ca;
-        }
-        header button:active, header .home-icon:active {
-            box-shadow: 0 2px #0a58ca;
-            transform: translateY(3px);
-        }
-        .header-controls {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-        }
-        .search-bar, .dropdown {
-            width: 48%;
-        }
-        .search-bar input, select {
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-        }
-        .buttons {
-            margin-bottom: 20px;
-        }
-        .buttons button {
-            padding: 10px;
-            font-size: 16px;
-            margin: 5px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button {
-            background-color: #0d6efd;
-            color: #ffffff;
-            box-shadow: 0 5px #0a58ca;
-            transition: 0.3s;
-        }
-        button:hover {
-            background-color: #0a58ca;
-        }
-        button:active {
-            box-shadow: 0 2px #0a58ca;
-            transform: translateY(3px);
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        th, td {
-            padding: 10px;
-            border: 1px solid #34495e;
-            text-align: center;
-            word-wrap: break-word;
-        }
-        th {
-            background-color: #0d6efd;
-            color: #ffffff;
-        }
-        footer {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #0d6efd;
-            color: #ffffff;
-        }
-        .hidden-column {
-            display: none;
-        }
-        @media screen and (max-width: 768px) {
-            .header-controls {
-                flex-direction: column;
-                align-items: center;
-            }
-            .search-bar, .dropdown {
-                width: 100%;
-                margin-bottom: 10px;
-            }
-            header h1 {
-                font-size: 18px;
-            }
-            table {
-                font-size: 12px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Helpola Stock Screener</h1>
+        <div class="header-content">
+            <h1>Helpola Stock Screener</h1>
+            <button id="homeButton" class="home-icon">&#8962;</button>
+        </div>
         <div class="header-controls">
             <div class="search-bar">
                 <input type="text" id="searchInput" placeholder="Search by Stock Symbol or Company Name" />
@@ -140,36 +22,39 @@
                 </select>
             </div>
         </div>
-        <button id="homeButton" class="home-icon">&#8962;</button>
     </header>
-    <div class="container">
-        <div class="buttons">
-            <button id="underValuedButton">Find Under Valued Stocks</button>
-            <button id="overValuedButton">Find Over Valued Stocks</button>
+    <main>
+        <div class="container">
+            <div class="buttons">
+                <button id="underValuedButton" class="animated-btn">Find Under Valued Stocks</button>
+                <button id="overValuedButton" class="animated-btn">Find Over Valued Stocks</button>
+            </div>
+            <div class="table-container">
+                <table id="stockTable">
+                    <thead>
+                        <tr>
+                            <th class="hidden-column">SYMBOL</th>
+                            <th class="hidden-column">Exchange & Symbol</th>
+                            <th>NAME OF COMPANY</th>
+                            <th class="hidden-column">Listing Date</th>
+                            <th>Current Price</th>
+                            <th>Start Price</th>
+                            <th>End Price</th>
+                            <th>CAGR</th>
+                            <th>52 Week High</th>
+                            <th>52 Week Low</th>
+                            <th>Market Cap</th>
+                            <th>EPS</th>
+                            <th>PE</th>
+                            <th>Intrinsic Value</th>
+                            <th>Stock Value</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
-        <table id="stockTable">
-            <thead>
-                <tr>
-                    <th class="hidden-column">SYMBOL</th>
-                    <th class="hidden-column">Exchange & Symbol</th>
-                    <th>NAME OF COMPANY</th>
-                    <th class="hidden-column">Listing Date</th>
-                    <th>Current Price</th>
-                    <th>Start Price</th>
-                    <th>End Price</th>
-                    <th>CAGR</th>
-                    <th>52 Week High</th>
-                    <th>52 Week Low</th>
-                    <th>Market Cap</th>
-                    <th>EPS</th>
-                    <th>PE</th>
-                    <th>Intrinsic Value</th>
-                    <th>Stock Value</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
+    </main>
     <footer>
         <p>© 2025 Helpola Stock Screener. All Rights Reserved.</p>
         <p>Disclaimer: Investing in stocks involves risks. Please consult a financial advisor before investing.</p>
