@@ -1,12 +1,17 @@
-function convertToCrore(value) {
-    if (!value || isNaN(value)) return "No Data";
-    const croreValue = (parseFloat(value) / 10000000).toFixed(2);
-    return `${croreValue} Cr`;
+function formatMarketCap(value) {
+    const number = parseFloat(value.replace(/,/g, ""));
+    if (isNaN(number)) return "No Data";
+    return (number / 10000000).toFixed(2) + " Cr";
+}
+
+function generateTradingViewLink(symbol) {
+    const baseUrl = "https://www.tradingview.com/symbols/";
+    return `${baseUrl}${symbol}`;
 }
 
 function populateDropdown(stocks) {
     const stockSelector = document.getElementById("stockSelector");
-    stockSelector.innerHTML = '<option value="">Select a Stock</option>'; // Clear previous options
+    stockSelector.innerHTML = '<option value="">Select a Stock</option>';
 
     const uniqueSymbols = [...new Set(stocks.map(stock => stock["SYMBOL"]))];
     uniqueSymbols.forEach(symbol => {
@@ -43,15 +48,25 @@ function displayStockDetails(stocks) {
 
             if (field === "SYMBOL" || field === "Exchange & Symbol" || field === "Listing Date") {
                 cell.classList.add("hidden-column");
-            }
-
-            if (field === "Market Cap") {
-                value = convertToCrore(value);
+            } else if (field === "Market Cap") {
+                value = formatMarketCap(value);
             }
 
             cell.textContent = value;
             row.appendChild(cell);
         });
+
+        // Add Trading View Link
+        const tradingCell = document.createElement("td");
+        const tradingLink = document.createElement("a");
+        tradingLink.href = generateTradingViewLink(stock["SYMBOL"]);
+        tradingLink.textContent = "View";
+        tradingLink.target = "_blank";
+        tradingLink.style.color = "#f39c12";
+        tradingLink.style.textDecoration = "none";
+        tradingCell.appendChild(tradingLink);
+        row.appendChild(tradingCell);
+
         tbody.appendChild(row);
     });
 }
@@ -86,9 +101,8 @@ async function init() {
     document.getElementById("searchInput").addEventListener("input", (event) => {
         const query = event.target.value.toLowerCase();
         const filteredStocks = stocks.filter(stock => {
-            const symbol = stock["SYMBOL"]?.toLowerCase() || "";
-            const companyName = stock["NAME OF COMPANY"]?.toLowerCase() || "";
-            return symbol.includes(query) || companyName.includes(query);
+            return (stock["SYMBOL"] && stock["SYMBOL"].toLowerCase().includes(query)) ||
+                   (stock["NAME OF COMPANY"] && stock["NAME OF COMPANY"].toLowerCase().includes(query));
         });
         displayStockDetails(filteredStocks);
     });
