@@ -1,3 +1,61 @@
+function convertToCrore(value) {
+    if (!value || isNaN(value)) return "No Data";
+    const croreValue = (parseFloat(value) / 10000000).toFixed(2);
+    return `${croreValue} Cr`;
+}
+
+function populateDropdown(stocks) {
+    const stockSelector = document.getElementById("stockSelector");
+    stockSelector.innerHTML = '<option value="">Select a Stock</option>'; // Clear previous options
+
+    const uniqueSymbols = [...new Set(stocks.map(stock => stock["SYMBOL"]))];
+    uniqueSymbols.forEach(symbol => {
+        const option = document.createElement("option");
+        option.value = symbol;
+        option.textContent = symbol;
+        stockSelector.appendChild(option);
+    });
+
+    stockSelector.addEventListener("change", (event) => {
+        const selectedStock = stocks.filter(stock => stock["SYMBOL"] === event.target.value);
+        displayStockDetails(selectedStock);
+    });
+}
+
+function displayStockDetails(stocks) {
+    const tbody = document.querySelector("#stockTable tbody");
+    tbody.innerHTML = "";
+
+    stocks.forEach(stock => {
+        const currentPrice = parseFloat(stock["Current Price"]);
+        const intrinsicValue = parseFloat(stock["Intrinsic Value"]);
+        const stockValue = intrinsicValue > currentPrice ? "Under Valued" : "Over Valued";
+        stock["Stock Value"] = stockValue;
+
+        const row = document.createElement("tr");
+        const fields = [
+            "SYMBOL", "Exchange & Symbol", "NAME OF COMPANY", "Listing Date", "Current Price", "Start Price", "End Price", "CAGR",
+            "52 Week High", "52 Week Low", "Market Cap", "EPS", "PE", "Intrinsic Value", "Stock Value"
+        ];
+        fields.forEach(field => {
+            const cell = document.createElement("td");
+            let value = stock[field] || "No Data";
+
+            if (field === "SYMBOL" || field === "Exchange & Symbol" || field === "Listing Date") {
+                cell.classList.add("hidden-column");
+            }
+
+            if (field === "Market Cap") {
+                value = convertToCrore(value);
+            }
+
+            cell.textContent = value;
+            row.appendChild(cell);
+        });
+        tbody.appendChild(row);
+    });
+}
+
 async function init() {
     const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSG2ohk3hAg5oHhi3RSeydX17ZiYYOVBKqzMEx6Ag-8yO6gJO2IeyZ8EmreIG3ROeJyRTD95TqOSU3U/pub?output=csv";
     const response = await fetch(csvUrl);
@@ -16,64 +74,23 @@ async function init() {
     displayStockDetails(stocks);
 
     document.getElementById("underValuedButton").addEventListener("click", () => {
-        const underValuedStocks = stocks.filter(stock => {
-            const currentPrice = parseFloat(stock["Current Price"]);
-            const intrinsicValue = parseFloat(stock["Intrinsic Value"]);
-            return intrinsicValue > currentPrice;
-        });
+        const underValuedStocks = stocks.filter(stock => stock["Stock Value"] === "Under Valued");
         displayStockDetails(underValuedStocks);
     });
 
     document.getElementById("overValuedButton").addEventListener("click", () => {
-        const overValuedStocks = stocks.filter(stock => {
-            const currentPrice = parseFloat(stock["Current Price"]);
-            const intrinsicValue = parseFloat(stock["Intrinsic Value"]);
-            return intrinsicValue <= currentPrice;
-        });
+        const overValuedStocks = stocks.filter(stock => stock["Stock Value"] === "Over Valued");
         displayStockDetails(overValuedStocks);
     });
 
     document.getElementById("searchInput").addEventListener("input", (event) => {
         const query = event.target.value.toLowerCase();
-        const filteredStocks = stocks.filter(stock =>
-            (stock["SYMBOL"] || "").toLowerCase().includes(query) ||
-            (stock["NAME OF COMPANY"] || "").toLowerCase().includes(query)
-        );
-        displayStockDetails(filteredStocks);
-    });
-}
-
-function populateDropdown(stocks) {
-    const stockSelector = document.getElementById("stockSelector");
-    stockSelector.innerHTML = '<option value="">Select a Stock</option>';
-    stocks.forEach(stock => {
-        const option = document.createElement("option");
-        option.value = stock["SYMBOL"];
-        option.textContent = stock["SYMBOL"];
-        stockSelector.appendChild(option);
-    });
-
-    stockSelector.addEventListener("change", (event) => {
-        const symbol = event.target.value;
-        const filteredStocks = stocks.filter(stock => stock["SYMBOL"] === symbol);
-        displayStockDetails(filteredStocks);
-    });
-}
-
-function displayStockDetails(stocks) {
-    const tbody = document.querySelector("#stockTable tbody");
-    tbody.innerHTML = "";
-    stocks.forEach(stock => {
-        const row = document.createElement("tr");
-        Object.entries(stock).forEach(([key, value]) => {
-            const cell = document.createElement("td");
-            cell.textContent = value || "N/A";
-            if (["SYMBOL", "Exchange & Symbol", "Listing Date"].includes(key)) {
-                cell.classList.add("hidden-column");
-            }
-            row.appendChild(cell);
+        const filteredStocks = stocks.filter(stock => {
+            const symbol = stock["SYMBOL"]?.toLowerCase() || "";
+            const companyName = stock["NAME OF COMPANY"]?.toLowerCase() || "";
+            return symbol.includes(query) || companyName.includes(query);
         });
-        tbody.appendChild(row);
+        displayStockDetails(filteredStocks);
     });
 }
 
