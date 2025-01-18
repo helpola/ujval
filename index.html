@@ -4,117 +4,134 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Helpola Stock Screener</title>
-    <!-- Link to external Google Fonts and icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #1c1c38, #4a90e2);
+            font-family: Arial, sans-serif;
+            background: linear-gradient(120deg, #1f1c2c, #928dab);
             color: #ffffff;
             margin: 0;
             padding: 0;
             text-align: center;
         }
         header {
-            background: #142850;
-            color: #ffffff;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         header h1 {
-            font-size: 36px;
             margin: 0;
+            color: #ffffff;
+            font-size: 24px;
+            animation: fadeIn 1s ease-in-out;
+        }
+        header button {
+            background-color: #2575fc;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 5px #1a5ec8;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+        header button:hover {
+            background-color: #1a5ec8;
+            transform: scale(1.1);
         }
         .header-controls {
-            margin-top: 10px;
             display: flex;
-            justify-content: center;
-            gap: 20px;
+            justify-content: space-between;
+            flex-grow: 1;
+            margin-left: 20px;
+            animation: slideIn 1s ease-out;
         }
-        .header-controls input, .header-controls select {
+        .search-bar input, select {
+            width: 100%;
             padding: 10px;
-            border-radius: 5px;
-            border: none;
             font-size: 16px;
+            border: none;
+            border-radius: 5px;
         }
         .buttons {
             margin: 20px 0;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
         }
         .buttons button {
-            background: linear-gradient(135deg, #4a90e2, #1c7ed6);
-            border: none;
-            color: #ffffff;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 10px 16px;
             font-size: 16px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
-            transition: transform 0.3s ease;
+            background-color: #f39c12;
+            color: #ffffff;
+            transition: transform 0.3s, background-color 0.3s;
         }
         .buttons button:hover {
-            transform: scale(1.1);
-            background: #1c7ed6;
+            background-color: #e67e22;
+            transform: translateY(-3px);
         }
         table {
-            width: 90%;
-            margin: 20px auto;
+            width: 100%;
             border-collapse: collapse;
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
+            margin: 20px 0;
+            animation: fadeIn 1s ease-in-out;
+            background-color: #1f1c2c;
             border-radius: 10px;
+            overflow: hidden;
         }
         th, td {
-            padding: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border: 1px solid #34495e;
             text-align: center;
-            color: #ffffff;
+            word-wrap: break-word;
         }
         th {
-            background: #142850;
+            background-color: #6a11cb;
+            color: #ffffff;
+        }
+        tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: scale(1.02);
+            transition: transform 0.3s, background-color 0.3s;
+        }
+        footer {
+            margin-top: 20px;
+            padding: 10px;
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            color: #ffffff;
+            animation: fadeIn 2s ease-in-out;
         }
         .hidden-column {
             display: none;
         }
-        footer {
-            margin-top: 20px;
-            background: #142850;
-            padding: 10px;
-            color: #ffffff;
-            font-size: 14px;
-        }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
-        tr {
-            animation: fadeIn 0.5s ease;
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+            }
+            to {
+                transform: translateX(0);
+            }
         }
-        @media (max-width: 768px) {
-            table, thead, tbody, th, td, tr {
-                display: block;
-                width: 100%;
+        @media screen and (max-width: 768px) {
+            header {
+                flex-direction: column;
             }
-            tr {
-                margin-bottom: 15px;
+            header h1 {
+                font-size: 20px;
+                margin-bottom: 10px;
             }
-            th, td {
-                text-align: left;
-                padding-left: 50%;
-                position: relative;
-            }
-            th::before, td::before {
-                content: attr(data-label);
-                position: absolute;
-                left: 0;
-                width: 45%;
-                padding-left: 15px;
-                font-weight: bold;
+            table {
+                font-size: 12px;
             }
         }
     </style>
@@ -122,14 +139,19 @@
 <body>
     <header>
         <h1>Helpola Stock Screener</h1>
-        <div class="header-controls">
-            <input type="text" id="searchInput" placeholder="Search by Stock Symbol or Company Name" />
-            <select id="stockSelector">
-                <option value="">Select a Stock</option>
-            </select>
-        </div>
+        <button id="homeButton" class="home-icon">&#8962;</button>
     </header>
     <div class="container">
+        <div class="header-controls">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search by Stock Symbol or Company Name" />
+            </div>
+            <div class="dropdown">
+                <select id="stockSelector">
+                    <option value="">Select a Stock</option>
+                </select>
+            </div>
+        </div>
         <div class="buttons">
             <button id="underValuedButton">Find Under Valued Stocks</button>
             <button id="overValuedButton">Find Over Valued Stocks</button>
@@ -137,21 +159,22 @@
         <table id="stockTable">
             <thead>
                 <tr>
-                    <th class="hidden-column" data-label="SYMBOL">SYMBOL</th>
-                    <th class="hidden-column" data-label="Exchange & Symbol">Exchange & Symbol</th>
-                    <th data-label="NAME OF COMPANY">NAME OF COMPANY</th>
-                    <th class="hidden-column" data-label="Listing Date">Listing Date</th>
-                    <th data-label="Current Price">Current Price</th>
-                    <th data-label="Start Price">Start Price</th>
-                    <th data-label="End Price">End Price</th>
-                    <th data-label="CAGR">CAGR</th>
-                    <th data-label="52 Week High">52 Week High</th>
-                    <th data-label="52 Week Low">52 Week Low</th>
-                    <th data-label="Market Cap">Market Cap (Cr)</th>
-                    <th data-label="EPS">EPS</th>
-                    <th data-label="PE">PE</th>
-                    <th data-label="Intrinsic Value">Intrinsic Value</th>
-                    <th data-label="Stock Value">Stock Value</th>
+                    <th class="hidden-column">SYMBOL</th>
+                    <th class="hidden-column">Exchange & Symbol</th>
+                    <th>NAME OF COMPANY</th>
+                    <th class="hidden-column">Listing Date</th>
+                    <th>Current Price</th>
+                    <th>Start Price</th>
+                    <th>End Price</th>
+                    <th>CAGR</th>
+                    <th>52 Week High</th>
+                    <th>52 Week Low</th>
+                    <th>Market Cap (₹ Cr)</th>
+                    <th>EPS</th>
+                    <th>PE</th>
+                    <th>Intrinsic Value</th>
+                    <th>Stock Value</th>
+                    <th>Trading View</th>
                 </tr>
             </thead>
             <tbody></tbody>
