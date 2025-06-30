@@ -5,27 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Helpola • Futuristic Stock Screener</title>
 
-  <!-- Google AMP‑Auto Ads (as requested) -->
+  <!-- Google AdSense (AMP + JS) -->
   <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6383018715052510" crossorigin="anonymous"></script>
 
-  <!-- TailwindCSS JIT -->
+  <!-- TailwindCSS JIT CDN -->
   <script src="https://cdn.tailwindcss.com/3.4.0"></script>
   <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:'#7c3aed'}}}}</script>
 
-  <!-- Icons & GSAP -->
+  <!-- Icons & Animations -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-Sf0TU6q+Xso1b+5n1tFkODHN1Ml+t4pneLgL5k3G1f5oW+5IQMJ3atJ0UeCfocUruFyvaJJQd3vdyzX5MLAOMA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-  <!-- Meta & Styles -->
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"/>
-  <style>[x-cloak]{display:none}body{font-family:'Inter',sans-serif}</style>
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+
+  <style>
+    [x-cloak]{display:none}
+    body{font-family:'Inter',sans-serif}
+    .hidden-col{display:none}
+  </style>
 </head>
 <body class="bg-gray-900 text-slate-100 scroll-smooth">
-  <!-- AMP Auto‑Ads element -->
+  <!-- AMP Auto Ads element -->
   <amp-auto-ads type="adsense" data-ad-client="ca-pub-6383018715052510"></amp-auto-ads>
 
-  <!-- ✨ NAVBAR -->
+  <!-- NAVBAR -->
   <header class="fixed w-full backdrop-blur-md bg-gray-800/80 z-50 shadow-md">
     <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
       <a href="#hero" class="flex items-center gap-2 text-lg font-bold tracking-wide"><i data-lucide="activity" class="w-6 h-6 text-amber-400"></i> Helpola</a>
@@ -38,7 +44,6 @@
       <button id="themeToggle" class="p-2 rounded-md hover:bg-white/10 transition"><i data-lucide="sun" class="w-5 h-5"></i></button>
       <button id="menuBtn" class="md:hidden p-2 ml-2 rounded-md hover:bg-white/10"><i data-lucide="menu" class="w-5 h-5"></i></button>
     </div>
-    <!-- mobile menu -->
     <div id="mobileMenu" class="md:hidden hidden flex-col gap-4 px-4 pb-4">
       <a href="#screener" class="block py-2 border-b border-white/10">Screener</a>
       <a href="#about" class="block py-2 border-b border-white/10">About</a>
@@ -47,19 +52,19 @@
     </div>
   </header>
 
-  <!-- ✨ HERO -->
+  <!-- HERO -->
   <section id="hero" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-brand via-indigo-600 to-fuchsia-600 relative overflow-hidden">
     <div class="absolute inset-0 pointer-events-none">
-      <svg class="w-full h-full opacity-20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#ffffff" fill-opacity="0.4" d="M0,224L48,192C96,160,192,96,288,106.7C384,117,480,203,576,208C672,213,768,139,864,122.7C960,107,1056,149,1152,144C1248,139,1344,85,1392,58.7L1440,32L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"/></svg>
+      <svg class="w-full h-full opacity-20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#ffffff" fill-opacity="0.3" d="M0,224L48,192C96,160,192,96,288,106.7C384,117,480,203,576,208C672,213,768,139,864,122.7C960,107,1056,149,1152,144C1248,139,1344,85,1392,58.7L1440,32L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"/></svg>
     </div>
-    <div class="relative z-10 text-center px-4">
+    <div class="relative z-10 text-center px-4 max-w-3xl">
       <h1 class="text-4xl md:text-6xl font-extrabold drop-shadow-lg">Futuristic <span class="text-amber-400">Stock Screener</span></h1>
-      <p class="mt-4 text-lg md:text-2xl max-w-3xl mx-auto">Real‑time analytics, intrinsic value insights & AI‑ready platform for retail investors.</p>
+      <p class="mt-4 text-lg md:text-2xl">Real‑time analytics, intrinsic value insights & AI‑ready platform for retail investors.</p>
       <a href="#screener" class="inline-block mt-8 px-6 py-3 rounded-lg bg-amber-400 text-black font-semibold hover:bg-amber-300 transition">Launch Screener</a>
     </div>
   </section>
 
-  <!-- ✨ STATS (auto‑update) -->
+  <!-- STATS -->
   <section id="stats" class="max-w-7xl mx-auto px-4 py-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
     <div class="statCard"><h3>Total Stocks</h3><p id="statTotal" class="statVal">–</p></div>
     <div class="statCard"><h3>Under Valued</h3><p id="statUnder" class="statVal text-emerald-400">–</p></div>
@@ -67,13 +72,12 @@
     <div class="statCard"><h3>Last Refresh</h3><p id="statTime" class="statVal">–</p></div>
   </section>
 
-  <!-- ✨ SCREENER -->
+  <!-- SCREENER -->
   <section id="screener" class="max-w-7xl mx-auto px-4 pb-24">
     <h2 class="text-3xl font-bold mb-6">Live Stock Screener</h2>
 
-    <!-- controls -->
     <div class="flex flex-wrap gap-3 mb-4">
-      <input id="searchInput" type="text" placeholder="Search…" class="flex-1 min-w-[220px] px-3 py-2 rounded-lg bg-white/10 placeholder-slate-400 outline-none focus:ring-2 focus:ring-brand"/>
+      <input id="searchInput" type="text" placeholder="Search…" class="flex-1 min-w-[220px] px-3 py-2 rounded-lg bg-white/10 placeholder-slate-400 outline-none focus:ring-2 focus:ring-brand" />
       <button id="btnUnder" class="chip">Under‑Valued</button>
       <button id="btnOver" class="chip">Over‑Valued</button>
       <button id="btnReset" class="chip">Reset</button>
@@ -89,7 +93,7 @@
     </div>
   </section>
 
-  <!-- ✨ ABOUT -->
+  <!-- ABOUT -->
   <section id="about" class="bg-gray-800 py-16 px-4">
     <div class="max-w-4xl mx-auto text-center">
       <h2 class="text-3xl font-bold mb-4">About Helpola</h2>
@@ -97,63 +101,62 @@
     </div>
   </section>
 
-  <!-- ✨ CONTACT & PRIVACY -->
+  <!-- CONTACT & PRIVACY -->
   <section id="contact" class="max-w-7xl mx-auto px-4 py-16 grid md:grid-cols-2 gap-12">
     <div>
       <h2 class="text-2xl font-bold mb-4">Contact Us</h2>
-      <p class="mb-2">Email us at <a href="mailto:contact.helpola@gmail.com" class="text-amber-400 underline">contact.helpola@gmail.com</a></p>
+      <p class="mb-2">Email: <a href="mailto:contact.helpola@gmail.com" class="text-amber-400 underline">contact.helpola@gmail.com</a></p>
       <p>We reply within 24‑48 hours.</p>
     </div>
     <div id="privacy">
       <h2 class="text-2xl font-bold mb-4">Privacy Policy</h2>
-      <p>We collect no personal data. AdSense may use cookies per Google policies.</p>
+      <p>We respect your privacy. Helpola does not collect any personally identifiable information from users. This site uses Google AdSense for monetization, which may use cookies to serve personalized ads. You can manage your ad settings through Google's <a href="https://policies.google.com/technologies/ads" class="underline text-blue-400" target="_blank" rel="noopener">Ad Policy</a>.</p>
+      <p class="mt-2 text-slate-400 text-sm">By using this site you consent to such cookies.</p>
     </div>
   </section>
 
-  <!-- ✨ AIDVISOR -->
+  <!-- AIDVISOR -->
   <section id="aidvisor" class="bg-gradient-to-br from-fuchsia-700 via-pink-600 to-rose-600 py-20 text-center px-4">
     <h2 class="text-4xl font-extrabold mb-4 drop-shadow-lg">AIdvisor (Coming Soon)</h2>
     <p class="text-lg max-w-2xl mx-auto mb-8">Our upcoming Android app will deliver on‑device AI stock analyses, smart alerts, and voice‑first recommendations. Stay tuned!</p>
     <a href="#" class="inline-block px-8 py-3 bg-white text-black rounded-lg font-semibold hover:bg-slate-200 transition">Join Waitlist</a>
   </section>
 
-  <footer class="py-8 text-center bg-gray-800 text-slate-400 text-sm">© 2025 Helpola. All rights reserved.</footer>
+  <footer class="py-8 text-center bg-gray-800 text-slate-400 text-sm">
+    <p>© 2025 Helpola. All rights reserved.</p>
+    <p class="mt-2 italic text-xs text-slate-500">Disclaimer: Stock investments are subject to market risk. Helpola provides educational information and does not constitute financial advice. Always do your own research or consult a SEBI‑registered advisor.</p>
+  </footer>
 
-  <!-- libs -->
+  <!-- Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
 
-  <!-- ✨ MAIN SCRIPT -->
+  <!-- MAIN SCRIPT -->
   <script type="module">
-    const CSV_URL = 'https://docs.google.com/spreadsheets/d/1Xm4kkneB3ogh-kzE0DYU8IbyDmJBD8Lb35MbrOSuWsk/export?format=csv';
-    const HEADERS = [
-      'SYMBOL','Exchange & Symbol','NAME OF COMPANY','DATE OF LISTING','Current Price','Start Price','End Price','CAGR (Growth Rate)','52 Week high','52 Week Low','Market Cap','EPS-Earn/ Share','PE','Intrinsic Value','Stock Value'
-    ];
-    const hidden = new Set(['Exchange & Symbol','DATE OF LISTING']);
+    const CSV_URL='https://docs.google.com/spreadsheets/d/1Xm4kkneB3ogh-kzE0DYU8IbyDmJBD8Lb35MbrOSuWsk/export?format=csv';
+    const HEADERS=['SYMBOL','Exchange & Symbol','NAME OF COMPANY','DATE OF LISTING','Current Price','Start Price','End Price','CAGR (Growth Rate)','52 Week high','52 Week Low','Market Cap','EPS-Earn/ Share','PE','Intrinsic Value','Stock Value'];
+    const hidden=new Set(['Exchange & Symbol','DATE OF LISTING']);
 
-    const tHead=document.getElementById('theadRow');
+    const theadRow=document.getElementById('theadRow');
     HEADERS.forEach(h=>{
-      const th=document.createElement('th');th.textContent=h;th.className=`px-3 py-2 ${hidden.has(h)?'hidden':''}`;tHead.appendChild(th);
+      const th=document.createElement('th');th.textContent=h;th.className=`px-3 py-2 ${hidden.has(h)?'hidden-col':''}`;theadRow.appendChild(th);
     });
+    // Chart header
+    const thChart=document.createElement('th');thChart.textContent='Chart';thChart.className='px-3 py-2';theadRow.appendChild(thChart);
 
-    const nf = Intl.NumberFormat('en-IN',{maximumFractionDigits:2});
+    const nf=Intl.NumberFormat('en-IN',{maximumFractionDigits:2});
     const formatCr=v=>isNaN(v)?'–':`${nf.format(v/1e7)} Cr`;
-
     let master=[];let display=[];let fuse;
 
     Papa.parse(CSV_URL,{download:true,header:true,skipEmptyLines:true,complete:r=>{
       master=r.data.map(s=>{
-        // numeric cleanup
-        const num=key=>parseFloat((s[key]||'').replace(/,/g,''))||NaN;
+        const num=k=>parseFloat((s[k]||'').replace(/,/g,''))||NaN;
         s['Current Price']=num('Current Price');
         s['Market Cap']=num('Market Cap');
-        s['EPS-Earn/ Share']=num('EPS-Earn/ Share');
         s['Intrinsic Value']=num('Intrinsic Value');
-        if(!s['Stock Value'] && !isNaN(s['Intrinsic Value']) && !isNaN(s['Current Price'])){
-          s['Stock Value']=s['Intrinsic Value']>s['Current Price']?'Under Valued':'Over Valued';
-        }
-        return s;
-      });
+        if(!s['Stock Value']&&!isNaN(s['Intrinsic Value'])&&!isNaN(s['Current Price'])){
+          s['Stock Value']=s['Intrinsic Value']>s['Current Price']?'Under Valued':'Over Valued';}
+        return s;});
       display=[...master];
       fuse=new Fuse(master,{keys:['SYMBOL','NAME OF COMPANY'],threshold:0.3});
       renderTable(display);
@@ -162,20 +165,20 @@
     }});
 
     function renderTable(data){
-      const tbody=document.querySelector('#table tbody');
-      tbody.innerHTML='';
+      const tbody=document.querySelector('#table tbody');tbody.innerHTML='';
       const frag=document.createDocumentFragment();
       data.forEach(stk=>{
         const tr=document.createElement('tr');tr.className='border-b border-white/10';
         HEADERS.forEach(f=>{
-          const td=document.createElement('td');td.className=`px-3 py-1 ${hidden.has(f)?'hidden':''}`;
-          let val=stk[f]||'–';
-          if(f==='Market Cap') val=formatCr(parseFloat(val));
+          const td=document.createElement('td');td.className=`px-3 py-1 ${hidden.has(f)?'hidden-col':''}`;
+          let val=stk[f]||'–';if(f==='Market Cap')val=formatCr(val);
           td.textContent=val;tr.appendChild(td);
         });
+        // TradingView link
+        const tvTd=document.createElement('td');tvTd.className='px-3 py-1';
+        const a=document.createElement('a');a.href=`https://www.tradingview.com/symbols/${stk['SYMBOL']}/`;a.textContent='View';a.target='_blank';a.className='text-amber-400 underline';tvTd.appendChild(a);tr.appendChild(tvTd);
         frag.appendChild(tr);
-      });
-      tbody.appendChild(frag);
+      });tbody.appendChild(frag);
     }
 
     function updateStats(){
@@ -184,7 +187,7 @@
       document.getElementById('statOver').textContent=master.filter(s=>s['Stock Value']?.includes('Over')).length;
     }
 
-    /* --- controls --- */
+    /* Controls */
     document.getElementById('searchInput').addEventListener('input',e=>{
       const q=e.target.value.trim();display=q?fuse.search(q).map(r=>r.item):[...master];renderTable(display);
     });
@@ -192,19 +195,20 @@
     document.getElementById('btnOver').onclick=()=>{display=master.filter(s=>s['Stock Value']?.includes('Over'));renderTable(display);};
     document.getElementById('btnReset').onclick=()=>{display=[...master];renderTable(display);};
 
-    /* --- theming & nav --- */
-    const html=document.documentElement;const iconEl=document.querySelector('#themeToggle i');
-    document.getElementById('themeToggle').onclick=()=>{html.classList.toggle('dark');iconEl.setAttribute('data-lucide',html.classList.contains('dark')?'moon':'sun');lucide.createIcons();};
-    lucide.createIcons();
+    /* Theme & Nav */
+    const html=document.documentElement;const themeIcon=()=>html.classList.contains('dark')?'sun':'moon';
+    const refreshIcon=()=>{const el=document.querySelector('#themeToggle i');el.setAttribute('data-lucide',themeIcon());lucide.createIcons();};
+    document.getElementById('themeToggle').addEventListener('click',()=>{html.classList.toggle('dark');refreshIcon();});
+    refreshIcon();lucide.createIcons();
 
-    const menuBtn=document.getElementById('menuBtn');const mobileMenu=document.getElementById('mobileMenu');menuBtn.onclick=()=>{mobileMenu.classList.toggle('hidden');};
+    document.getElementById('menuBtn').onclick=()=>document.getElementById('mobileMenu').classList.toggle('hidden');
 
-    /* --- card styles with GSAP reveal --- */
-    gsap.utils.toArray('.statCard').forEach((card,i)=>{
-      gsap.from(card,{scrollTrigger:{trigger:card,start:'top 80%'},opacity:0,y:20,duration:0.6,delay:i*0.1});
-      card.className+=' bg-gray-800 rounded-lg p-6 text-center';
-      card.querySelector('h3').className='text-sm font-semibold text-slate-300';
-      card.querySelector('.statVal').className+=' text-2xl font-bold mt-2';
+    /* GSAP reveal & styles for stat cards / chips */
+    gsap.utils.toArray('.statCard').forEach((c,i)=>{
+      c.className+=' bg-gray-800 rounded-lg p-6 text-center';
+      c.querySelector('h3').className='text-sm font-semibold text-slate-300';
+      c.querySelector('.statVal').className+=' text-2xl font-bold mt-2';
+      gsap.from(c,{scrollTrigger:{trigger:c,start:'top 80%'},y:20,opacity:0,duration:0.6,delay:i*0.1});
     });
     document.querySelectorAll('.chip').forEach(btn=>btn.className+=' px-4 py-2 bg-white/10 rounded-full hover:bg-white/20');
   </script>
